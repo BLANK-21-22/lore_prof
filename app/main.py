@@ -8,4 +8,3 @@ app = Flask(__name__)
 @app.route("/index", methods=["GET", "POST"])
 def main_page():
     return render_template("index.html")
-
