@@ -12,7 +12,7 @@ Session = sessionmaker(bind=engine)
 Base = declarative_base(bind=engine)
 
 
-class Users(Base):
+class User(Base):
     __tablename__ = "users"
 
     id = Column("id", Integer, autoincrement=True)
@@ -25,7 +25,7 @@ class Users(Base):
     )
 
 
-class Events(Base):
+class Event(Base):
     __tablename__ = "events"
 
     id = Column("id", Integer, autoincrement=True)
@@ -40,7 +40,7 @@ class Events(Base):
     )
 
 
-class Spheres(Base):
+class Sphere(Base):
     __tablename__ = "spheres"
 
     id = Column("id", Integer)
@@ -51,7 +51,7 @@ class Spheres(Base):
     )
 
 
-class Professions(Base):
+class Profession(Base):
     __tablename__ = "professions"
 
     id = Column("id", Integer)
@@ -63,7 +63,7 @@ class Professions(Base):
     )
 
 
-class EventsRegistered(Base):
+class EventRegistered(Base):
     __tablename__ = "events_registered"
 
     event_id = Column("event_id", Integer)
@@ -75,7 +75,7 @@ class EventsRegistered(Base):
     )
 
 
-class EventsSpheres(Base):
+class EventSpheres(Base):
     __tablename__ = "events_spheres"
 
     sphere_id = Column("sphere_id", Integer)
@@ -88,7 +88,7 @@ class EventsSpheres(Base):
     )
 
 
-class ProfessionsSpheres(Base):
+class ProfessionSpheres(Base):
     __tablename__ = "professions_spheres"
 
     prof_id = Column("prof_id", Integer)
@@ -101,7 +101,7 @@ class ProfessionsSpheres(Base):
     )
 
 
-class ProfessionsPhotos(Base):
+class ProfessionPhotos(Base):
     __tablename__ = "professions_photos"
 
     prof_id = Column("prof_id", Integer)
@@ -115,12 +115,12 @@ class ProfessionsPhotos(Base):
 
 if database_configs["recreate_database"]:
     # Пересоздание всей БД. Очищение от всех данных.
-
+    # Base.metadata.drop_all(engine)
     session = Session()
     for _class in [
-        Users, Events, Spheres, Professions,
-        EventsRegistered, EventsSpheres, ProfessionsSpheres,
-        ProfessionsPhotos
+        User, Event, Sphere, Profession,
+        EventRegistered, EventSpheres, ProfessionSpheres,
+        ProfessionPhotos
     ]:
         session.query(_class).delete()
     Base.metadata.create_all(bind=engine)
