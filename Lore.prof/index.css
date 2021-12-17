@@ -7,18 +7,88 @@ body {
     background-color: #121212;
 }
 
+header {
+    background-color: black;
+    box-shadow: none;
+}
+
 .mainInfo {
     height: 70px;
+}
+.logo {
+    width: 4%;
+    height: auto;
+    margin-right: 30px;
+}
+
+.logo:hover {
+    opacity: 0.8;
+}
+
+.linkToMain {
+    position: relative;
+    text-decoration: none;
+    left: 10px;
+    top: 5px;
+}
+
+.itemMenu {
+    color: white;
+    font-size: 19px;
+    text-decoration: none;
+    position: relative;
+    top: -20%;
+    margin-right: 30px;
+}
+
+button:hover {
+    opacity: 0.8;
 }
 
 .iconLogin {
     border: none;
     background-color: rgba(0, 0, 0, 0.00);
     color: white;
-    font-size: 150%;
+    font-size: 19px;
     position: absolute;
     top: 20px;
     right: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #000000;
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    border: 1px solid #888;
+    width: 80%;
+    padding: 2%;
+}
+
+.imgcontainer {
+    text-align: center;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 25px;
+    top: -10px;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
 }
 
 label {
@@ -55,25 +125,10 @@ input[type=text], input[type=password] {
     border-radius: 10%;
 }
 
-
-button:hover {
-    opacity: 0.8;
-}
-
 .cancelbtn {
     width: auto;
     padding: 10px 18px;
     background-color: #f44336;
-}
-
-.imgcontainer {
-    text-align: center;
-    position: relative;
-}
-
-img.avatar {
-    width: 40%;
-    border-radius: 50%;
 }
 
 .container {
@@ -85,39 +140,7 @@ span.psw {
     padding-top: 16px;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: #000000;
-    background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto 15% auto;
-    border: 1px solid #888;
-    width: 80%;
-    padding: 2%;
-}
-
-.close {
-    position: absolute;
-    right: 25px;
-    top: -10px;
-    color: #000;
-    font-size: 35px;
-    font-weight: bold;
-}
-
-    .close:hover,
-    .close:focus {
+.close:hover, .close:focus {
         color: red;
         cursor: pointer;
     }
@@ -153,33 +176,13 @@ span.psw {
     }
 }
 
-header {
-    background-color: black;
-    box-shadow: none;
+footer {
     display: flex;
     justify-content: space-around;
-    flex-direction: row;
-    align-content: space-around;
-}
-
-.logo {
-    width: 5%;
-    height: auto;
-    margin-right: 30px;
-}
-
-.logo:hover {
-    opacity: 0.8;
-}
-
-.itemMenu {
-    color: white;
-    font-size: 130%;
-    text-decoration: none;
-    position: relative;
-    bottom: 35%;
-    margin-right: 30px;
-}
-.linkToMain {
-    text-decoration: none;
+    background-color: black;
+    box-shadow: none;
+    font-size: 15px;
+    font-family: -apple-system,Nunito Sans,SF Pro Text,SF Pro Icons,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-weight: 400;
+    line-height: 1.43;
 }
