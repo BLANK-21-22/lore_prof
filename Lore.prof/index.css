@@ -1,17 +1,23 @@
+<!DOCTYPE html>
+<html>
 body {
+    color: #f2f2f2;
     margin: 0;
+    font-size: 0.875rem;
+    font-family: -apple-system,Nunito Sans,SF Pro Text,SF Pro Icons,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-weight: 400;
+    line-height: 1.43;
+    background-color: #121212;
 }
+
 .mainInfo {
     height: 70px;
 }
 
 .iconLogin {
     border: none;
-    background-color: black;
-    width: 3%;
-    height: auto;
-    margin-left: 96%;
-    margin-top: -3%;
+    background-color: rgba(0, 0, 0, 0.00);
+    color: white;
 }
 
 input[type=text], input[type=password] {
@@ -48,6 +54,7 @@ input[type=text], input[type=password] {
 button:hover {
     opacity: 0.8;
 }
+
 .cancelbtn {
     width: auto;
     padding: 10px 18px;
@@ -74,16 +81,16 @@ span.psw {
 }
 
 .modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1; 
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
+    width: 100%;
+    height: 100%;
     overflow: auto;
-    background-color: #000000; 
-    background-color: rgba(0,0,0,0.4); 
+    background-color: #000000;
+    background-color: rgba(0,0,0,0.4);
     padding-top: 60px;
 }
 
@@ -104,52 +111,68 @@ span.psw {
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
-    color: red;
-    cursor: pointer;
-}
+    .close:hover,
+    .close:focus {
+        color: red;
+        cursor: pointer;
+    }
 
 @-webkit-keyframes animatezoom {
-    from {-webkit-transform: scale(0)} 
-    to {-webkit-transform: scale(1)}
+    from {
+        -webkit-transform: scale(0)
+    }
+
+    to {
+        -webkit-transform: scale(1)
+    }
 }
-    
+
 @keyframes animatezoom {
-    from {transform: scale(0)} 
-    to {transform: scale(1)}
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
 }
 
 @media screen and (max-width: 300px) {
     span.psw {
-       display: block;
-       float: none;
+        display: block;
+        float: none;
     }
+
     .cancelbtn {
-       width: 100%;
+        width: 100%;
     }
 }
+
 header {
     background-color: black;
     display: flex;
+    flex-flow: column;
+    box-shadow: none;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
 }
+
 .logo {
-    margin-bottom: -2.5%;
-    margin-left: 0.5%;
     width: 5%;
     height: auto;
 }
-.iconPhoto {
-    width: 3%;
-    height: auto;
-    margin-left: 96%;
-    margin-top: -3%;
+
+.logo:hover {
+    opacity: 0.8;
 }
+
 .itemMenu {
     color: white;
-    position: relative;
-    top: 10%;
-    margin: 0 5% 0 0;
     font-size: 130%;
+    text-decoration: none;
+    
+}
+.linkToMain {
     text-decoration: none;
 }
