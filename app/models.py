@@ -67,7 +67,7 @@ class Sphere(Base):
 class Profession(Base):
     __tablename__ = "professions"
 
-    id = Column("id", Integer)
+    id = Column("id", Integer, autoincrement=True)
     name = Column("name", VARCHAR(25))
     article = Column("article", Text)
 

@@ -76,6 +76,30 @@ def get_all_spheres():
 
 
 @add_object
+def add_profession(name: str, article: str):
+    new_profession = Profession(
+        name=name,
+        article=article
+    )
+    return new_profession
+
+
+@delete_object_by_id
+def delete_profession_by_id(profession_id: int):
+    return Profession, profession_id
+
+
+def get_all_professions():
+    session: SessionObject
+    session = Session()
+
+    result_object = session.query(Profession).all()
+
+    session.close()
+    return result_object
+
+
+@add_object
 def add_user(full_name: str, email: str, hash_password: str):
     if check_free_email(email):
         new_user = User(
