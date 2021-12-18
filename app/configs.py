@@ -7,5 +7,8 @@ flask_configs = {
 }
 database_configs = {
     "url": "sqlite:///lore_prof.db",
-    "recreate_database": False
+    "recreate_database": True
 }
+
+token_size = 64
+token_symbols = "qwertyuiopasdfghjklzxcvbnm1234567890"

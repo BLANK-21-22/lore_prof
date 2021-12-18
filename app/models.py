@@ -25,6 +25,19 @@ class User(Base):
     )
 
 
+class Token(Base):
+    __tablename__ = "tokens"
+
+    user_id = Column("user_id", Integer)
+    token = Column("token", VARCHAR(64))
+    expiration_date = Column("expiration_date", TIMESTAMP)
+
+    __table_args__ = (
+        PrimaryKeyConstraint("token"),
+        ForeignKeyConstraint(("user_id", ), ("users.id", ))
+    )
+
+
 class Event(Base):
     __tablename__ = "events"
 
@@ -115,14 +128,8 @@ class ProfessionPhotos(Base):
 
 if database_configs["recreate_database"]:
     # Пересоздание всей БД. Очищение от всех данных.
-    # Base.metadata.drop_all(engine)
+    Base.metadata.drop_all(engine)
     session = Session()
-    for _class in [
-        User, Event, Sphere, Profession,
-        EventRegistered, EventSpheres, ProfessionSpheres,
-        ProfessionPhotos
-    ]:
-        session.query(_class).delete()
     Base.metadata.create_all(bind=engine)
     session.commit()
     session.close()
