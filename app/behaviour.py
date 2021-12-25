@@ -5,7 +5,7 @@ from models import EventRegistered, ProfessionSpheres
 from models import Profession, ProfessionPhotos, User, Sphere
 from models import Token
 from models import Session
-from sqlalchemy.orm import Session as SessionObject
+from sqlalchemy.orm import Session as SessionObject, Query
 
 from random import choice as random_choice
 from configs import token_symbols, token_size
@@ -183,3 +183,89 @@ def authorize_user(token: str):
     info: Token
     info = session.query(Token).filter(Token.token == token).count()
     return bool(info)
+
+
+@add_object
+def add_event(event_name: str, date_of_the_event: datetime,
+              description: str, place: str,
+              form_of_the_event: str):
+    """Добавление мероприятия."""
+    return Event(
+        name=event_name,
+        date_of_the_event=date_of_the_event,
+        description=description,
+        place=place,
+        form_of_the_event=form_of_the_event
+    )
+
+
+@delete_object_by_id
+def delete_event(event_id):
+    """Удаление мероприятия"""
+    return Event, event_id
+
+
+def get_all_events(limit: int, offset: int, from_date: datetime, to_date: datetime):
+    """
+    Получение списка всех мероприятий за определённый срок.
+    """
+    session: SessionObject
+    with Session() as session:
+        result: Query
+        result = session.query(Event)
+
+        result = result.filter(Event.date_of_the_event <= to_date)
+        result = result.filter(Event.date_of_the_event >= from_date)
+
+        result = result.order_by(Event.date_of_the_event.desc())
+        result = result.offset(offset).limit(limit)
+        result = result.all()
+        return result
+
+
+@add_object
+def register_user_on_event(user_id: int, event_id: int):
+    """
+    Регистрация пользователя на событие.
+    """
+    return EventRegistered(
+        user_id=user_id,
+        event_id=event_id
+    )
+
+
+def delete_registration_on_event(user_id: int, event_id: int):
+    """
+    Удалить запись о регистрации пользователя.
+    """
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        event_registered = session.query(EventRegistered).filter(EventRegistered.user_id == user_id)
+        event_registered = event_registered.filter(EventRegistered.event_id == event_id).first()
+        if event_registered:
+            session.delete(event_registered)
+            session.commit()
+            return True, event_registered
+        return False, None
+
+
+def user_registered(user_id: int):
+    """
+    Куда зарегистрирован пользователь.
+    """
+    session: SessionObject
+    with Session() as session:
+        query: Query
+        query = session.query(EventRegistered).filter(user_id == EventRegistered.user_id)
+        return query.all()
+
+
+def count_registered(event_id: int):
+    """
+    Сколько зарегистрировалось на мероприятия.
+    """
+    session: SessionObject
+    with Session() as session:
+        query: Query
+        query = session.query(EventRegistered).filter(event_id == EventRegistered.event_id)
+        return query.count()

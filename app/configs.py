@@ -7,7 +7,7 @@ flask_configs = {
 }
 database_configs = {
     "url": "sqlite:///lore_prof.db",
-    "recreate_database": False
+    "recreate_database": True
 }
 
 token_size = 64

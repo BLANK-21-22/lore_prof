@@ -39,6 +39,8 @@ class Token(Base):
 
 
 class Event(Base):
+    def __repr__(self):
+        return f"<Event id={self.id}, name='{self.name}'>"
     __tablename__ = "events"
 
     id = Column("id", Integer, autoincrement=True)
@@ -77,6 +79,8 @@ class Profession(Base):
 
 
 class EventRegistered(Base):
+    def __repr__(self):
+        return f"<EventRegistered user_id={self.user_id}, event_id={self.event_id}>"
     __tablename__ = "events_registered"
 
     event_id = Column("event_id", Integer)
