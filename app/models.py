@@ -56,6 +56,8 @@ class Event(Base):
 
 
 class Sphere(Base):
+    def __repr__(self):
+        return f"<Sphere id={self.id}, name='{self.name}'>"
     __tablename__ = "spheres"
 
     id = Column("id", Integer)
@@ -67,6 +69,8 @@ class Sphere(Base):
 
 
 class Profession(Base):
+    def __repr__(self):
+        return f"<Profession id={self.id}, name='{self.name}'>"
     __tablename__ = "professions"
 
     id = Column("id", Integer, autoincrement=True)
@@ -93,6 +97,8 @@ class EventRegistered(Base):
 
 
 class EventSpheres(Base):
+    def __repr__(self):
+        return f"<EventSpheres sphere_id={self.sphere_id}, event_id={self.event_id}>"
     __tablename__ = "events_spheres"
 
     sphere_id = Column("sphere_id", Integer)
@@ -105,7 +111,9 @@ class EventSpheres(Base):
     )
 
 
-class ProfessionSpheres(Base):
+class ProfessionSphere(Base):
+    def __repr__(self):
+        return f"<ProfessionSphere prof_id={self.prof_id}, sphere_id={self.sphere_id}>"
     __tablename__ = "professions_spheres"
 
     prof_id = Column("prof_id", Integer)
@@ -119,6 +127,8 @@ class ProfessionSpheres(Base):
 
 
 class ProfessionPhotos(Base):
+    def __repr__(self):
+        return f"<ProfessionPhoto prof_id={self.prof_id}, link='{self.link}'>"
     __tablename__ = "professions_photos"
 
     prof_id = Column("prof_id", Integer)

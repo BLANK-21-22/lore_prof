@@ -1,7 +1,7 @@
 # Этот модуль предназначен исключительно для методов, относящимися к Базе Данных.
 
 from models import Event, EventSpheres
-from models import EventRegistered, ProfessionSpheres
+from models import EventRegistered, ProfessionSphere
 from models import Profession, ProfessionPhotos, User, Sphere
 from models import Token
 from models import Session
@@ -205,7 +205,7 @@ def delete_event(event_id):
     return Event, event_id
 
 
-def get_all_events(limit: int, offset: int, from_date: datetime, to_date: datetime):
+def get_events(limit: int, offset: int, from_date: datetime, to_date: datetime):
     """
     Получение списка всех мероприятий за определённый срок.
     """
@@ -269,3 +269,137 @@ def count_registered(event_id: int):
         query: Query
         query = session.query(EventRegistered).filter(event_id == EventRegistered.event_id)
         return query.count()
+
+
+@add_object
+def add_sphere_to_event(sphere_id: int, event_id: int):
+    return EventSpheres(
+        sphere_id=sphere_id,
+        event_id=event_id
+    )
+
+
+def delete_sphere_from_event(sphere_id: int, event_id: int):
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        query: Query
+        query = session.query(EventSpheres)
+        query = query.filter(EventSpheres.event_id == event_id)
+        query = query.filter(EventSpheres.sphere_id == sphere_id)
+
+        result = query.first()
+        if result:
+            session.delete(result)
+            session.commit()
+            return True, result
+        return False, None
+
+
+@add_object
+def add_sphere_to_profession(profession_id: int, sphere_id: int):
+    return ProfessionSphere(
+        prof_id=profession_id,
+        sphere_id=sphere_id
+    )
+
+
+def delete_sphere_from_profession(profession_id: int, sphere_id: int):
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        query: Query
+        query = session.query(ProfessionSphere)
+        query = query.filter(ProfessionSphere.prof_id == profession_id)
+        query = query.filter(ProfessionSphere.sphere_id == sphere_id)
+        result = query.first()
+        if result:
+            session.delete(result)
+            session.commit()
+            return True, result
+        return False, None
+
+
+@add_object
+def add_photo_to_profession(profession_id: int, link: str):
+    return ProfessionPhotos(
+        prof_id=profession_id,
+        link=link
+    )
+
+
+def delete_photo_from_profession(profession_id: int, link: str):
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        query: Query
+        query = session.query(ProfessionPhotos)
+        query = query.filter(ProfessionPhotos.prof_id == profession_id)
+        query = query.filter(ProfessionPhotos.link == link)
+        result = query.first()
+        if result:
+            session.delete(result)
+            session.commit()
+            return True, result
+        return False, None
+
+
+def get_event(event_id: int):
+    """
+    Получение конкретного события.
+    None/Dict
+    Форма Dict:
+    {
+        "event": EventObject,
+        "spheres": [EventSpheresObject, ]
+    }
+    """
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        query: Query
+        query = session.query(Event, Sphere)
+        query = query.outerjoin(EventSpheres, EventSpheres.event_id == Event.id)
+        query = query.outerjoin(Sphere, Sphere.id == EventSpheres.sphere_id)
+
+        query = query.filter(Event.id == event_id)
+        result = query.all()
+        if result:
+            result = {
+                "event": result[0][0],
+                "spheres": [x[1] for x in result]
+            }
+            return result
+
+
+def get_profession(profession_id: int):
+    """
+    Получение конкретной профессии.
+    Форма ответа:
+    None/Dict
+    Форма Dict:
+    {
+        "profession": ProfessionObject,
+        "spheres": [ProfessionSphereObject, ],
+        "photos": [ProfessionPhotosObject, ]
+    }
+    """
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        query: Query
+        query = session.query(Profession, ProfessionSphere, ProfessionPhotos)
+        query = query.outerjoin(ProfessionSphere, ProfessionSphere.prof_id == Profession.id)
+        query = query.outerjoin(ProfessionPhotos, ProfessionPhotos.prof_id == Profession.id)
+        query = query.filter(Profession.id == profession_id)
+        result = query.all()
+        if result:
+            beauty_result = {
+                "profession": result[0][0],
+                "spheres": [],
+                "photos": []
+            }
+            for _, sphere, photo in result:
+                if sphere and sphere not in beauty_result["spheres"]:
+                    beauty_result["spheres"].append(sphere)
+                if photo and photo not in beauty_result["photos"]:
+                    beauty_result["photos"].append(photo)
+        else:
+            beauty_result = None
+
+        return beauty_result
