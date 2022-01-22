@@ -1,0 +1,77 @@
+{% macro header() %}
+
+<div calss="header">
+    <div class="mainInfo">
+        <a class="linkToMain" href="/index" aria-disabled="false">
+            <img class="logo" src="{{url_for('static', filename='common_photos/logo.png')}}">
+        </a>
+        <a href="/calendar" class="itemMenu">
+            Календарь мероприятий
+        </a>
+        <a href="/archive" class="itemMenu">
+            Архив мероприятий
+        </a>
+        <a href="/professionsInfo" class="itemMenu">
+            Информация о профессиях
+        </a>
+        <button class="butLogin" onclick="document.getElementById('id01').style.display='block'">
+            | Вход
+        </button>
+    </div>
+
+    <div id="id01" class="modal">
+        <form class="modal-content" method="POST" action="/login">
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close">
+                    ×
+                </span>
+            </div>
+
+            <div class="loginContainer">
+                <label for="uname">
+                    <b>
+                        Логин
+                    </b>
+                </label>
+                <input type="text" placeholder="Введите логин" name="login" required>
+
+                <label for="psw">
+                    <b>
+                        Пароль
+                    </b>
+                </label>
+                <input type="password" placeholder="Введите пароль" name="password" required>
+    
+                <button class="login" type="submit">
+                    Войти
+                </button>
+                <label>
+                    <input type="checkbox" checked="checked" name="need_to_remember"> Запомнить меня
+                </label>
+            </div>
+
+            <div>
+                <button type="button" onclick="window.location.href = '/registration';" class="regbtn login">
+                    Зарегистрироваться
+                </button>
+                <span class="psw">
+                    <a href="#">
+                        Забыли пароль?
+                    </a>
+                </span>
+            </div>
+        </form>
+    </div>
+
+       
+    <script>
+        var modal = document.getElementById('id01');
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</div>
+{% endmacro %}    
