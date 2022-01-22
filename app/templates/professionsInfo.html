@@ -4,7 +4,7 @@
     <title>Lore.Prof</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='common.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='info-profStyle.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='professionsInfoStyle.css')}}">
     <link rel="shortcut icon" href="{{url_for('static', filename='common_photos/logo.png')}}" type="image/png" >
 </head>
 
@@ -30,7 +30,7 @@
 
             <div id="id01" class="modal">
 
-                <form class="modal-content">
+                <form class="modal-content" method="POST" action="/login">
                     <div class="imgcontainer">
                         <span onclick="document.getElementById('id01').style.display='none'" class="close">
                             ×
@@ -43,20 +43,20 @@
                                 Логин
                             </b>
                         </label>
-                        <input type="text" placeholder="Введите логин" name="uname" required>
+                        <input type="text" placeholder="Введите логин" name="login" required>
 
                         <label for="psw">
                             <b>
                                 Пароль
                             </b>
                         </label>
-                        <input type="password" placeholder="Введите пароль" name="psw" required>
+                        <input type="password" placeholder="Введите пароль" name="password" required>
 
                         <button class="login" type="submit">
                             Войти
                         </button>
                         <label>
-                            <input type="checkbox" checked="checked" name="remember"> Запомнить меня
+                            <input type="checkbox" checked="checked" name="need_to_remember"> Запомнить меня
                         </label>
                     </div>
 
@@ -100,7 +100,7 @@
                 </div>
             {% endfor %}
             <div class="card">
-                <img src="{{url_for('static', filename='Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
+                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
                 <div class="cardBody">
                     <h3 class="cardTitle">Профессия</h3>
                     <p class="cardText">Что-то о профе в 1-2 предл.</p>
@@ -110,7 +110,7 @@
                  </div>
             </div>
             <div class="card">
-                <img src="{{url_for('static', filename='Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
+                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
                 <div class="cardBody">
                     <h3 class="cardTitle">Профессия</h3>
                     <p class="cardText">Что-то о профе в 1-2 предл.</p>
@@ -120,7 +120,7 @@
                  </div>
             </div>
          <div class="card">
-                <img src="{{url_for('static', filename='Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
+                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
                 <div class="cardBody">
                     <h3 class="cardTitle">Профессия</h3>
                     <p class="cardText">Что-то о профе в 1-2 предл.</p>
@@ -130,7 +130,7 @@
                  </div>
          </div>
                 <div class="card">
-                    <img src="{{url_for('static', filename='Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
+                    <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
                     <div class="cardBody">
                         <h3 class="cardTitle">Профессия</h3>
                         <p class="cardText">Что-то о профе в 1-2 предл.</p>
@@ -142,7 +142,7 @@
             </div>
             <div class="cardRow">
                 <div class="card">
-                <img src="{{url_for('static', filename='Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
+                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
                 <div class="cardBody">
                     <h3 class="cardTitle">Профессия</h3>
                     <p class="cardText">Что-то о профе в 1-2 предл.</p>
@@ -152,7 +152,7 @@
                  </div>
             </div>
             <div class="card">
-                <img src="{{url_for('static', filename='Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
+                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
                 <div class="cardBody">
                     <h3 class="cardTitle">Профессия</h3>
                     <p class="cardText">Что-то о профе в 1-2 предл.</p>

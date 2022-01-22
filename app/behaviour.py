@@ -9,7 +9,9 @@ from sqlalchemy.orm import Session as SessionObject, Query
 
 from random import choice as random_choice
 from configs import token_symbols, token_size
+
 from datetime import datetime, timedelta
+import datetime
 
 
 def add_object(func_to_create):
@@ -152,7 +154,7 @@ def authenticate_user(email: str, hash_password: str):
     if not user:
         return False, None
     user = user[0]
-
+    token: Token
     is_token, token = get_new_token(user.id)
 
     if not is_token:
@@ -174,15 +176,23 @@ def check_free_email(email: str):
     return not bool(query.count())
 
 
-def authorize_user(token: str):
+def get_user_by_token(token: str):
     """
-    Разрешение доступа к ресурсу.
+    Получение пользователя, исходя из его токена.
     """
     session: SessionObject
-    session = Session()
-    info: Token
-    info = session.query(Token).filter(Token.token == token).count()
-    return bool(info)
+    with Session() as session:
+        token = session.query(Token).get(token)
+        if token:
+            if token.expiration_date > datetime.now():
+                user_id = token.user_id
+                user = session.query(User).get(user_id)
+            else:
+                user = None
+        else:
+            user = None
+
+    return user
 
 
 @add_object

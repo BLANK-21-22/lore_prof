@@ -12,3 +12,4 @@ database_configs = {
 
 token_size = 64
 token_symbols = "qwertyuiopasdfghjklzxcvbnm1234567890"
+token_expire_date = 86400
