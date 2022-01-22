@@ -1,9 +1,7 @@
 
 {% macro usedalot(somevalue) %}
-<div class="usedalot">{{ somevalue }}
 
-<div id="id01" class="modal">
-
+<div class="login modal">{{ somevalue }}
                 <form class="modal-content" method="POST" action="/login">
                     <div class="imgcontainer">
                         <span onclick="document.getElementById('id01').style.display='none'" class="close">
@@ -45,7 +43,6 @@
                         </span>
                     </div>
                 </form>
-            </div>
-
 </div>
+
 {% endmacro %}    
