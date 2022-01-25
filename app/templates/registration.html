@@ -4,104 +4,61 @@
     <title>Lore.Prof</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='common.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='registrationStyle.css')}}">
     <link rel="shortcut icon" href="{{url_for('static', filename='common_photos/logo.png')}}" type="image/png" >
 </head>
 
 <body>
 	<div class="wrapper">
     <header>
-        <div class="mainInfo">
-            <a class="linkToMain" href="/index" aria-disabled="false">
-                <img class="logo" src="{{url_for('static', filename='common_photos/logo.png')}}">
-            </a>
-            <a href="/calendar" class="itemMenu">
-                Календарь мероприятий
-            </a>
-            <a href="/archive" class="itemMenu">
-                Архив мероприятий
-            </a>
-            <a href="/professionsInfo" class="itemMenu">
-                Информация о профессиях
-            </a>
-            <button class="butLogin" onclick="document.getElementById('id01').style.display='block'">
-                | Вход
-            </button>
+            {% from 'header.html' import header %}
 
-            <div id="id01" class="modal">
-
-                <form class="modal-content">
-                    <div class="imgcontainer">
-                        <span onclick="document.getElementById('id01').style.display='none'" class="close">
-                            ×
-                        </span>
-                    </div>
-
-                    <div class="loginContainer">
-                        <label for="uname">
-                            <b>
-                                Логин
-                            </b>
-                        </label>
-                        <input type="text" placeholder="Введите логин" name="uname" required>
-
-                        <label for="psw">
-                            <b>
-                                Пароль
-                            </b>
-                        </label>
-                        <input type="password" placeholder="Введите пароль" name="psw" required>
-
-                        <button class="login" type="submit">
-                            Войти
-                        </button>
-                        <label>
-                            <input type="checkbox" checked="checked" name="remember">
-                            Запомнить меня
-                        </label>
-                    </div>
-
-                    <div>
-                        <button type="button" onclick="window.location.href = '/registration';" class="regbtn login">
-                            Зарегестрироваться
-                        </button>
-                        <span class="psw">
-                            <a href="#">
-                                Забыли пароль?
-                            </a>
-                        </span>
-                    </div>
-                </form>
-            </div>
-
-            <script>
-                var modal = document.getElementById('id01');
-                window.onclick = function(event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
-                    }
-                }
-            </script>
-
-        </div>
+            {{ header() }} 
     </header>
 
     <main>
+<form action="action_page.php">
+  <div class="container">
+    <h1>Регистрация</h1>
+    <p>Заполните следующие поля, чтобы зарегистрироваться на сайте.</p>
+    <hr>
 
-        <h1>This is a page for registration</h1>
+    <label for="name" class="regLabel"><b>Имя Фамилия</b></label>
+    <input type="text" placeholder="Введите Имя и Фамилию" name="name" required>
+
+    <label for="email" class="regLabel"><b>Email</b></label>
+    <input type="text" placeholder="Введите Email" name="email" required>
+
+    <label for="psw" class="regLabel"><b>Пароль</b></label>
+    <input type="password" placeholder="Введите Пароль" name="psw" required>
+
+    <label for="psw-repeat" class="regLabel"><b>Повторить Пароль</b></label>
+    <input type="password" placeholder="Повторите Пароль" name="psw-repeat" required>
+    <hr>
+
+    <div class="acces">
+		<label>
+	        <input type="checkbox" class="js-register-terms">
+	        <span class="terms" style="color: white">
+	        Я прочитал и согласен с <a href="#" style="color: white;"> Политикой конфиденциальности</a> и <a href="#" style="color: white;">Условиями пользования</a>.
+	        </span>
+	    </label>
+	</div>
+
+    <button type="submit" class="registerbtn">
+    	<b>Зарегистрироваться</b>
+    </button>
+
+  </div>
+
+</form>
     </main>
 	</div>
 
     <footer>
-        <p>
-            © Lore.prof, 2021
-        </p>
-        <p>
-            Наши <a href="#" style="color: white;"> Политика конфиденциальности</a> и <a href="#" style="color: white;">Условия пользования</a></p>
-        <p>
-            <a href="mailto:support@lore-prof.it-reu.ru" style="color: white;">
-                Написать в тех. поддержку 
-            </a>
-        </p>
+            {% from 'footer.html' import footer %}
+
+            {{ footer() }} 
     </footer>
 </body>
 </html>
