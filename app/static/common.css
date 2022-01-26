@@ -190,7 +190,7 @@ main {
     min-height: 100%;
 }
 
-footer {
+.footer {
     height: 52px;
     display: flex;
     justify-content: space-around;
