@@ -11,7 +11,7 @@
 <body>
 	<div class="wrapper">
     <header>
-            {% from 'header.html' import header %}
+            {% from 'headerMacr.html' import header %}
 
             {{ header() }} 
     </header>
@@ -55,10 +55,9 @@
     </main>
 	</div>
 
-    <footer>
-            {% from 'footer.html' import footer %}
+            {% from 'footerMacr.html' import footer %}
 
             {{ footer() }} 
-    </footer>
+	
 </body>
 </html>

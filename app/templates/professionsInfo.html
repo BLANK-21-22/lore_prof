@@ -11,7 +11,7 @@
 <body>
     <div class="wrapper">
     <header>
-            {% from 'header.html' import header %}
+            {% from 'headerMacr.html' import header %}
 
             {{ header() }}     
     </header>
@@ -97,16 +97,9 @@
     </div>
 
     <footer>
-        <p>
-            © Lore.prof, 2021
-        </p>
-        <p>
-            Наши <a href="#" style="color: white;"> Политика конфиденциальности</a> и <a href="#" style="color: white;">Условия пользования</a></p>
-        <p>
-            <a href="mailto:support@lore-prof.it-reu.ru" style="color: white;">
-                Написать в тех. поддержку 
-            </a>
-        </p>
+            {% from 'footerMacr.html' import footer %}
+
+            {{ footer() }}  
     </footer>
 </body>
 </html>
