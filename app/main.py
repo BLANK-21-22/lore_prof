@@ -41,6 +41,11 @@ def main_page():
     return render_template("index.html")
 
 
+@app.route("/aboutMeet")
+def no_num_meet():
+    return redirect("/archive")
+
+
 @app.route("/aboutMeet/<int:meet_id>", methods=["GET"])
 def get_meet(meet_id: int):
     url = f"/aboutMeet/{meet_id}"
@@ -60,6 +65,11 @@ def get_professions():
     url = "/professionsInfo"
     account = authorize(url)
     return render_template("professionsInfo.html")
+
+
+@app.route("/profession")
+def no_num_profession():
+    return redirect("/professionsInfo")
 
 
 @app.route("/profession/<int:profession_id>", methods=["GET"])
