@@ -17,35 +17,35 @@
     </header>
 
     <main>
-<form action="action_page.php">
+<form action="/succesRegistr.html">
   <div class="container">
     <h1>Регистрация</h1>
     <p>Заполните следующие поля, чтобы зарегистрироваться на сайте.</p>
     <hr>
 
     <label for="name" class="regLabel"><b>Имя Фамилия</b></label>
-    <input type="text" placeholder="Введите Имя и Фамилию" name="name" required>
+    <input type="text" placeholder="Введите Имя и Фамилию" name="full_name" required>
 
     <label for="email" class="regLabel"><b>Email</b></label>
     <input type="text" placeholder="Введите Email" name="email" required>
 
     <label for="psw" class="regLabel"><b>Пароль</b></label>
-    <input type="password" placeholder="Введите Пароль" name="psw" required>
+    <input type="password" placeholder="Введите Пароль" name="password" required>
 
     <label for="psw-repeat" class="regLabel"><b>Повторить Пароль</b></label>
-    <input type="password" placeholder="Повторите Пароль" name="psw-repeat" required>
+    <input type="password" placeholder="Повторите Пароль" required>
     <hr>
 
     <div class="acces">
 		<label>
-	        <input type="checkbox" class="js-register-terms">
+	        <input type="checkbox" class="js-register-terms" name="agreement">
 	        <span class="terms" style="color: white">
 	        Я прочитал и согласен с <a href="#" style="color: white;"> Политикой конфиденциальности</a> и <a href="#" style="color: white;">Условиями пользования</a>.
 	        </span>
 	    </label>
 	</div>
 
-    <button type="submit" class="registerbtn">
+    <button type="submit" class="registerbtn" onclick="window.location.href = '/registration';">
     	<b>Зарегистрироваться</b>
     </button>
 
@@ -54,10 +54,12 @@
 </form>
     </main>
 	</div>
+	<footer>
 
             {% from 'footerMacr.html' import footer %}
 
-            {{ footer() }} 
+            {{ footer() }}
+	</footer>
 	
 </body>
 </html>
