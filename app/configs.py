@@ -13,3 +13,6 @@ database_configs = {
 token_size = 64
 token_symbols = "qwertyuiopasdfghjklzxcvbnm1234567890"
 token_expire_date = 86400
+
+# 7 (604800 секунд) дней перед событием.
+events_thru_to_date_in_seconds = 604800

@@ -91,14 +91,18 @@ def delete_profession_by_id(profession_id: int):
     return Profession, profession_id
 
 
-def get_all_professions():
+def get_all_professions(limit: int, offset: int):
+    """
+    Возвращает список из объектов Profession.
+    [ProfessionObject, ProfessionObject...]
+    """
     session: SessionObject
-    session = Session()
-
-    result_object = session.query(Profession).all()
-
-    session.close()
-    return result_object
+    with Session() as session:
+        all_professions = session.query(Profession)
+        all_professions = all_professions.order_by(Profession.name.desc())
+        all_professions = all_professions.offset(offset).limit(limit)
+        all_professions = all_professions.all()
+    return all_professions
 
 
 @add_object
@@ -218,6 +222,8 @@ def delete_event(event_id):
 def get_events(limit: int, offset: int, from_date: datetime, to_date: datetime):
     """
     Получение списка всех мероприятий за определённый срок.
+
+    [EventObject, EventObject...]
     """
     session: SessionObject
     with Session() as session:
@@ -230,7 +236,7 @@ def get_events(limit: int, offset: int, from_date: datetime, to_date: datetime):
         result = result.order_by(Event.date_of_the_event.desc())
         result = result.offset(offset).limit(limit)
         result = result.all()
-        return result
+    return result
 
 
 @add_object
