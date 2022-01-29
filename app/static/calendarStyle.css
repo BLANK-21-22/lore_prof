@@ -1,42 +1,42 @@
 #input-wrapper {
 	display: inline-block;
-  	position: relative;
-  	margin-bottom: 20px;
+	position: relative;
+	margin-bottom: 20px;
 }
 
 #input-wrapper::after {
-  	content: attr(data-text);
-  	line-height: 0;
-  	height: 0;
-  	max-width: 100%;
-  	border-bottom: 2px solid #fff;
-  	position: absolute;
-  	left: 0;
-  	bottom: 0;
-  	height: 3px;
-  	overflow: hidden;
-  	user-select: none;
-  	color: transparent;
+	content: attr(data-text);
+	line-height: 0;
+	height: 0;
+	max-width: 100%;
+	border-bottom: 2px solid #fff;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 3px;
+	overflow: hidden;
+	user-select: none;
+	color: transparent;
 }
 
 #inputSearch {
-  	color: #ddd;
-  	border: none;
-  	padding: 0;
-  	border-radius: 0;
-  	outline: none;
-  	width: auto;
-  	min-width: 100%;
-  	line-height: 3em;
-  	border-bottom: 2px solid #333333;
-  	background-color: transparent;
+	color: #ddd;
+	border: none;
+	padding: 0;
+	border-radius: 0;
+	outline: none;
+	width: auto;
+	min-width: 100%;
+	line-height: 3em;
+	border-bottom: 2px solid #333333;
+	background-color: transparent;
 }
 
 .meet {
-    display: flex;
-    flex-wrap: nowrap;
-    padding: 15px 0;
-    border-bottom: 4px dotted black;
+	display: flex;
+	flex-wrap: nowrap;
+	padding: 15px 0;
+	border-bottom: 4px dotted black;
 }
 
 .meetAboutTime {
@@ -72,3 +72,4 @@ h3 {
 	color: #FFD700;
 	margin-left: 500%;
 }
+
