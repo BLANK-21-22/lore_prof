@@ -3,30 +3,29 @@
 <head>
     <title>Lore.Prof</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='pastMeetStyle.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='common.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='registrationStyle.css')}}">
     <link rel="shortcut icon" href="{{url_for('static', filename='common_photos/logo.png')}}" type="image/png" >
 </head>
 
 <body>
 	<div class="wrapper">
     <header>
-	    
             {% from 'headerMacr.html' import header %}
-            {{ header() }} 
-	    
+
+            {{ header() }}
     </header>
-
+        
     <main>
-        <h1 style="color: #FFD700">Благодарим за регистрацию</h1>
+        <h1>This is a page about past meet</h1>
     </main>
-	</div>
-	<footer>
+</div>
 
-            {% from 'footerMacr.html' import footer %}
-            {{ footer() }}
-		
-	</footer>
-	
+<footer>
+    
+    {% from 'footerMacr.html' import footer %}
+    {{ footer() }}
+    
+</footer>
 </body>
 </html>

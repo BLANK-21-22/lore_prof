@@ -17,43 +17,40 @@
 	    
     </header>
 
-    <main>
-<form action="/succesRegistr.html">
-  <div class="container">
-    <h1>Регистрация</h1>
-    <p>Заполните следующие поля, чтобы зарегистрироваться на сайте.</p>
-    <hr>
+  <main>
+        <form action="/registration">
+            <div class="container">
+                <h1>Регистрация</h1>
+                <p>Заполните следующие поля, чтобы зарегистрироваться на сайте.</p>
+                <hr>
 
-    <label for="name" class="regLabel"><b>Имя Фамилия</b></label>
-    <input type="text" placeholder="Введите Имя и Фамилию" name="full_name" required>
+                <label for="name" class="regLabel"><b>Имя Фамилия</b></label>
+                <input type="text" placeholder="Введите Имя и Фамилию" name="name" required>
 
-    <label for="email" class="regLabel"><b>Email</b></label>
-    <input type="text" placeholder="Введите Email" name="email" required>
+                <label for="email" class="regLabel"><b>Email</b></label>
+                <input type="text" placeholder="Введите Email" name="email" required>
 
-    <label for="psw" class="regLabel"><b>Пароль</b></label>
-    <input type="password" placeholder="Введите Пароль" name="password" required>
+                <label for="psw" class="regLabel"><b>Пароль</b></label>
+                <input type="password" placeholder="Введите Пароль" name="password"  id="psw" required>
+                <hr>
 
-    <label for="psw-repeat" class="regLabel"><b>Повторить Пароль</b></label>
-    <input type="password" placeholder="Повторите Пароль" required>
-    <hr>
+                <div class="acces">
+                    <label>
+                        <span class="terms" style="color: white;">
+                            Регистрируясь, вы подтверждаете, что прочитали и согласны с <a href="#" style="color: white;"> Политикой конфиденциальности</a> и <a href="#" style="color: white;">Условиями пользования</a>.
+                        </span>
+                    </label>
+                </div>
 
-    <div class="acces">
-		<label>
-	        <input type="checkbox" class="js-register-terms" name="agreement">
-	        <span class="terms" style="color: white">
-	        Я прочитал и согласен с <a href="#" style="color: white;"> Политикой конфиденциальности</a> и <a href="#" style="color: white;">Условиями пользования</a>.
-	        </span>
-	    </label>
-	</div>
+                <button type="submit" class="registerbtn">
+                    <b>Зарегистрироваться</b>
+                </button>
 
-    <button type="submit" class="registerbtn" onclick="window.location.href = '/registration';">
-    	<b>Зарегистрироваться</b>
-    </button>
+            </div>
 
-  </div>
-
-</form>
+        </form>
     </main>
+		
 	</div>
 	<footer>
 

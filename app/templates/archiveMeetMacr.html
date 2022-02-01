@@ -1,0 +1,40 @@
+{% macro pastMeet() %}
+
+<div class="pastMeet">
+    <div class="meetAboutTime">
+        <div class="meetTime">
+            <p class="parTime">
+                15:00 мск
+            </p>
+        </div>
+        <div class="meetTime">
+            <p class="parTime">
+                Вт
+            </p>
+        </div>
+        <div class="meetTime meetDate">
+            <p class="parTime">
+                XX
+                <br>
+                Января
+            </p>
+        </div>
+    </div>
+    <div class="meetAbout">
+        <div class="meetName">
+            <h3 onclick="window.location.href = './aboutMeet.html';">
+                Некое название митапа
+            </h3>
+        </div>
+        <div class="meetInfo">
+            <p>
+                Нечто о митапе.
+            </p>
+            <button class="meetDetails" onclick="window.location.href = '/aboutMeet';">
+                Подробнее
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endmacro %}    

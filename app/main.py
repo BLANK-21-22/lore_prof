@@ -129,3 +129,10 @@ def register_request():
         return render_template("registration.html", account=None)
     if request.method == "POST":
         return redirect("/")
+
+
+@app.route("/lookThru/<string:file_name>")
+def get_template(file_name):
+    url = "/"
+    account = authorize(url)
+    return render_template(file_name, account=account)

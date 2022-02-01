@@ -3,6 +3,7 @@
 <head>
     <title>Lore.Prof</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='archiveStyle.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='common.css')}}">
     <link rel="shortcut icon" href="{{url_for('static', filename='common_photos/logo.png')}}" type="image/png" >
 </head>
@@ -15,7 +16,22 @@
             {{ header() }}
     </header>
     <main>
-        <h1>This is arcvie of meet-up</h1>
+        
+        <form class="d-flex" id="input-wrapper">
+            <input class="form-control me-2" id="inputSearch" type="search" placeholder="Что ищем?" aria-label="Search">
+        </form>
+        
+        {% from 'archiveMeetMacr.html' import pastMeet %}
+            {{ pastMeet() }}
+        
+        {% from 'archiveMeetMacr.html' import pastMeet %}
+            {{ pastMeet() }}
+        
+        {% from 'archiveMeetMacr.html' import pastMeet %}
+            {{ pastMeet() }}
+        
+        {% from 'archiveMeetMacr.html' import pastMeet %}
+            {{ pastMeet() }}
     </main>
     </div>
 

@@ -38,7 +38,7 @@ hr {
   border: 2px solid #FFD700;
   color: #FFD700;
   font-size: 1rem;
-  }
+}
 
 .registerbtn:hover {
   opacity: 0.8;
@@ -50,4 +50,44 @@ hr {
 .acces {
   width: 50%;
   margin: 8px 25%;
+}
+
+#registerform-sex .radio {
+  float: left;
+  margin-right: 10px;
+}
+
+.form-control {
+  border-radius: 0;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.field-registerform-sex {
+  margin-bottom: 0;
+}
+
+.disabled {
+  color: #ccc;
+}
+
+#phone-verify {
+  display: none;
+}
+
+#register-finish .header {
+  padding: 0;
+}
+.header-logo {
+  height: 45px;
+  display: flex;
+  align-items: center;
+}
+.grecaptcha-badge {
+  display: none;
+}
+.reglabel, a {
+  color: white;
 }
