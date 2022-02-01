@@ -1,0 +1,75 @@
+#input-wrapper {
+	display: inline-block;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+#input-wrapper::after {
+	content: attr(data-text);
+	line-height: 0;
+	height: 0;
+	max-width: 100%;
+	border-bottom: 2px solid #fff;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 3px;
+	overflow: hidden;
+	user-select: none;
+	color: transparent;
+}
+
+#inputSearch {
+	color: #ddd;
+	border: none;
+	padding: 0;
+	border-radius: 0;
+	outline: none;
+	width: auto;
+	min-width: 100%;
+	line-height: 3em;
+	border-bottom: 2px solid #333333;
+	background-color: transparent;
+}
+
+.meet {
+	display: flex;
+	flex-wrap: nowrap;
+	padding: 15px 0;
+	border-bottom: 4px dotted black;
+}
+
+.meetAboutTime {
+	padding: 0px 10px 10px 10px;
+	margin-right: 30px;
+	border: 3px solid black;
+}
+
+.meetTime {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+	margin-bottom: 0;
+}
+
+.parTime {
+	margin: 0;
+}
+
+.meetDate {
+	text-align: center;
+}
+
+h3 {
+	margin-top: 3%;
+	color: #FFD700;
+}
+
+.meetDetails {
+	padding: 5px;
+	background-color: inherit;
+	border: 2px solid #FFD700;
+	color: #FFD700;
+	margin-left: 500%;
+}
+
