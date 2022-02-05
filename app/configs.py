@@ -16,3 +16,4 @@ token_expire_date = 86400
 
 # 7 (604800 секунд) дней перед событием.
 events_thru_to_date_in_seconds = 604800
+event_date_format = "%Y-%m-%d %H:%M %z"

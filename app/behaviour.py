@@ -185,7 +185,7 @@ def get_user_by_token(token: str):
     Получение пользователя, исходя из его токена.
     """
     session: SessionObject
-    with Session() as session:
+    with Session(expire_on_commit=False) as session:
         token = session.query(Token).get(token)
         if token:
             if token.expiration_date > datetime.datetime.now():
