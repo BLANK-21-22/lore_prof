@@ -1,15 +1,5 @@
 {% macro header(full_name) %}
 
-<script>
-        var login = document.getElementById('login');
-        var nonLogin = document.getElementById('nonLogin');
-            if ({{full_name}} == '') {
-                login.style.display='none';
-            }
-            else if ({{full_name}} != '') {
-                nonLogin.style.display='none';
-            };
-        </script>
 
 <div class="header">
     <div class="mainInfo">
@@ -27,6 +17,17 @@
         </a>
     </div>
     
+<script>
+        var login = document.getElementById('login');
+        var nonLogin = document.getElementById('nonLogin');
+            if ({{full_name}} == '') {
+                login.style.display='none';
+            }
+            else if ({{full_name}} != '') {
+                nonLogin.style.display='none';
+            };
+        </script>
+        
         <button class="butLogin" id="nonLogin" onclick="document.getElementById('id01').style.display='block'">
             | Вход
         </button>
