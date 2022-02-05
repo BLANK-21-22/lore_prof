@@ -13,6 +13,7 @@
         <header>
 
             {% from 'headerMacr.html' import header %}
+		
             {{ header(account.full_name) }}
 
         </header>
@@ -21,6 +22,7 @@
             <form class="d-flex" id="input-wrapper">
                 <input class="form-control me-2" id="inputSearch" type="search" placeholder="Что ищем?" aria-label="Search">
             </form>
+		
             <h2 style="color: #FFD700">По вашему запросу ничего не найдено</h2>
         </main>
     </div>
