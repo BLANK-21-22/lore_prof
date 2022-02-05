@@ -15,11 +15,11 @@
             Информация о профессиях
         </a>
     </div>
-
-    <div id="nonLogin">
-        <button class="butLogin" onclick="document.getElementById('id01').style.display='block'">
+    
+        <button class="butLogin" id="nonLogin" onclick="document.getElementById('id01').style.display='block'">
             | Вход
         </button>
+    
         <div id="id01" class="modal">
             <form class="modal-content" method="POST" action="/login">
                 <div class="imgcontainer">
@@ -63,7 +63,6 @@
                 </div>
             </form>
         </div>
-    </div>
     
     <script>
         var login = document.getElementById('login');
@@ -90,8 +89,7 @@
         };
     </script>
 
-    <div id="login">
-        <button class="butLogin" onclick="document.getElementById('id02').style.display='block'">
+        <button class="butLogin" id="login" onclick="document.getElementById('id02').style.display='block'">
             <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" fill="currentColor"
                  class="bi bi-person-circle" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
@@ -101,9 +99,7 @@
 
         <div id="id02" class="">
 
-
         </div>
-    </div>
 
 </div>
 
