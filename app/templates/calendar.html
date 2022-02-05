@@ -12,9 +12,9 @@
 <body>
     <div class="wrapper">
     <header>
-            {% from 'headerMacr.html' import header %}
+            {% from 'headerMacr.html' import header(full_name) %}
 
-            {{ header() }}
+            {{ header(full_name) }}
     </header>
 
     <main>
