@@ -1,5 +1,6 @@
 {% macro header(full_name) %}
 
+
 <div class="header">
     <div class="mainInfo">
         <a class="linkToMain" href="/index" aria-disabled="false">
@@ -15,11 +16,22 @@
             Информация о профессиях
         </a>
     </div>
-
-    <div id="nonLogin">
-        <button class="butLogin" onclick="document.getElementById('id01').style.display='block'">
+    
+<script>
+        var login = document.getElementById('login');
+        var nonLogin = document.getElementById('nonLogin');
+            if ({{full_name}} == '') {
+                login.style.display='none';
+            }
+            else if ({{full_name}} != '') {
+                nonLogin.style.display='none';
+            };
+        </script>
+        
+        <button class="butLogin" id="nonLogin" onclick="document.getElementById('id01').style.display='block'">
             | Вход
         </button>
+    
         <div id="id01" class="modal">
             <form class="modal-content" method="POST" action="/login">
                 <div class="imgcontainer">
@@ -63,32 +75,26 @@
                 </div>
             </form>
         </div>
-    </div>
-    <script>
-            if (full_name == '') {
-                document.getElementById('login').style.display='none';
-            }
-            else if (full_name != '') {
-                document.getElementById('nonLogin').style.display='none';
-            }
+    
+    
+        <script>
         
         var modal = document.getElementById('id01');
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
-        }
+        };
 
         var mod = document.getElementById('id02');
         window.onclick = function(event) {
             if (event.target == mod) {
                 mod.style.display = "none";
             }
-        }
+        };
     </script>
 
-    <div id="login">
-        <button class="butLogin" onclick="document.getElementById('id02').style.display='block'">
+        <button class="butLogin" id="login" onclick="document.getElementById('id02').style.display='block'">
             <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" fill="currentColor"
                  class="bi bi-person-circle" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
@@ -98,9 +104,7 @@
 
         <div id="id02" class="">
 
-
         </div>
-    </div>
 
 </div>
 
