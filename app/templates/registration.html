@@ -13,12 +13,12 @@
     <header>
 	    
             {% from 'headerMacr.html' import header %}
-            {{ header() }} 
-	    
+            {{ header() }}
+
     </header>
 
   <main>
-        <form action="/registration">
+        <form action="/registration" method="POST">
             <div class="container">
                 <h1>Регистрация</h1>
                 <p>Заполните следующие поля, чтобы зарегистрироваться на сайте.</p>

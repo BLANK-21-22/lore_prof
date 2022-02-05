@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session as SessionObject, Query
 from random import choice as random_choice
 from configs import token_symbols, token_size
 
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
 import datetime
 
 
@@ -106,12 +106,12 @@ def get_all_professions(limit: int, offset: int):
 
 
 @add_object
-def add_user(full_name: str, email: str, hash_password: str):
+def add_user(full_name: str, email: str, hashed_password: str):
     if check_free_email(email):
         new_user = User(
             full_name=full_name,
             email=email,
-            hash_password=hash_password
+            hash_password=hashed_password
         )
         return new_user
     return None
@@ -137,7 +137,7 @@ def get_new_token(user_id: int):
         not_free_token = bool(session.query(Token).filter(Token.token == new_token).count())
 
     session.close()
-    expiration_date = datetime.now() + timedelta(days=1)
+    expiration_date = datetime.datetime.now() + datetime.timedelta(days=1)
     return Token(
         user_id=user_id,
         token=new_token,
@@ -188,7 +188,7 @@ def get_user_by_token(token: str):
     with Session() as session:
         token = session.query(Token).get(token)
         if token:
-            if token.expiration_date > datetime.now():
+            if token.expiration_date > datetime.datetime.now():
                 user_id = token.user_id
                 user = session.query(User).get(user_id)
             else:

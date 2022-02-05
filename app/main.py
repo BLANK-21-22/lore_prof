@@ -2,13 +2,17 @@ import datetime
 
 from flask import render_template, redirect
 from flask import Flask, session, request
-from behaviour import get_user_by_token, authenticate_user
+from behaviour import get_user_by_token, authenticate_user, add_user
 from configs import token_expire_date, events_thru_to_date_in_seconds
 import behaviour
 from hashlib import md5
 
 app = Flask(__name__)
 app.secret_key = "22JJJd8888**eds___Dss09((((ejwsk4ll"
+
+
+def hash_password(password: str):
+    return md5(bytes(password, encoding="utf-8")).hexdigest()
 
 
 def set_token(response, token: str):
@@ -109,9 +113,9 @@ def logining_request():
         }
 
     login = info["login"]
-    hash_password = md5(bytes(info["password"], encoding="utf-8")).hexdigest()
+    hashed_password = hash_password(info["password"])
 
-    success, token = authenticate_user(login, hash_password)
+    success, token = authenticate_user(login, hashed_password)
 
     if "url" in session:
         response = redirect(session["url"])
@@ -128,7 +132,30 @@ def register_request():
     if request.method == "GET":
         return render_template("registration.html", account=None)
     if request.method == "POST":
-        return redirect("/")
+        params = ["name", "email", "password"]
+        request_dict = dict(request.values)
+        if not all([x in request_dict for x in params]):
+            return redirect("/registration")
+
+        hashed_password = hash_password(request_dict["password"])
+        success, user = add_user(
+            full_name=request_dict["name"],
+            email=request_dict["email"],
+            hashed_password=hashed_password
+        )
+        if not success:
+            """Аккаунт уже был создан ранее."""
+            return render_template("registration.html", account=None)
+
+        success, token = authenticate_user(request_dict["email"], hashed_password)
+        if not success:
+            """Unknown error."""
+            return redirect("/registration")
+
+        response = redirect("/")
+        set_token(response, token.token)
+
+        return response
 
 
 @app.route("/lookThru/<string:file_name>")
