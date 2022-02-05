@@ -1,7 +1,7 @@
 import datetime
 
 import behaviour
-from models import Profession, Event
+from models import Profession, Event, Sphere
 from configs import event_date_format
 
 users_have_permission = ["test@specialdomain.com", ]
@@ -42,7 +42,7 @@ class Response:
 
 
 class ProfessionResponse(Response):
-    needed_params_to_add = ["name", "article", "token"]
+    needed_params_to_add = ["name", "article", "spheres_id", "token"]
     needed_params_to_delete = ["id", "token"]
 
     def __init__(self, code: int, method: str, new_profession: Profession = None):
@@ -62,12 +62,10 @@ class ProfessionResponse(Response):
 
 class EventResponse(Response):
     needed_params_to_add = [
-        "name", "date_of_the_event", "description",
+        "name", "date_of_the_event", "description", "spheres_id",
         "place", "form_of_the_event", "token"
     ]
-    needed_params_to_delete = [
-        "id", "token"
-    ]
+    needed_params_to_delete = ["id", "token"]
 
     def __init__(self, code: int, method: str, new_event: Event = None):
         super(EventResponse, self).__init__(code, method)
@@ -84,6 +82,24 @@ class EventResponse(Response):
             event_dict["place"] = self.event.place
             event_dict["form_of_the_event"] = self.event.form_of_the_event
             response_dict["event"] = event_dict
+        return response_dict
+
+
+class SphereResponse(Response):
+    needed_params_to_add = ["name", "token"]
+    needed_params_to_delete = ["id", "token"]
+
+    def __init__(self, code: int, method: str, new_sphere: Sphere = None):
+        super(SphereResponse, self).__init__(code, method)
+        self.sphere = new_sphere
+
+    def __dict__(self):
+        response_dict = super(SphereResponse, self).__dict__()
+        if self.sphere and bool(self):
+            sphere_dict = dict()
+            sphere_dict["id"] = self.sphere.id
+            sphere_dict["name"] = self.sphere.name
+            response_dict["sphere"] = sphere_dict
         return response_dict
 
 
@@ -106,6 +122,15 @@ def add_profession(method: str, request: dict):
         name=request["name"],
         article=request["article"]
     )
+    for sphere_id in request["spheres_id"]:
+        sphere_id = int(sphere_id)
+        success, _ = behaviour.add_sphere_to_profession(
+            profession_id=new_profession.id,
+            sphere_id=sphere_id
+        )
+        if not success:
+            return ProfessionResponse(500, method)
+
     if not success:
         return ProfessionResponse(500, method)
     return ProfessionResponse(200, method, new_profession)
@@ -122,10 +147,17 @@ def delete_profession(method: str, request: dict):
     if user.email not in users_have_permission:
         return ProfessionResponse(403, method)
 
-    success, that_profession = behaviour.delete_profession_by_id(request["id"])
-    if success:
-        return ProfessionResponse(200, method, that_profession)
-    return ProfessionResponse(500, method, that_profession)
+    profession_id = int(request["id"])
+
+    success = behaviour.delete_sphere_from_profession(profession_id)
+    if not success:
+        return ProfessionResponse(500, method)
+
+    success, that_profession = behaviour.delete_profession_by_id(profession_id)
+    if not success:
+        return ProfessionResponse(500, method, that_profession)
+
+    return ProfessionResponse(200, method, that_profession)
 
 
 def add_event(method: str, request: dict):
@@ -148,8 +180,19 @@ def add_event(method: str, request: dict):
         place=request["place"],
         form_of_the_event=request["form_of_the_event"]
     )
+
     if not success:
         return EventResponse(500, method)
+
+    for sphere_id in request["spheres_id"]:
+        sphere_id = int(sphere_id)
+        success, _ = behaviour.add_sphere_to_event(
+            sphere_id=sphere_id,
+            event_id=new_event.id
+        )
+        if not success:
+            return EventResponse(500, method)
+
     return EventResponse(200, method, new_event)
 
 
@@ -164,10 +207,57 @@ def delete_event(method: str, request: dict):
     if user.email not in users_have_permission:
         return EventResponse(403, method)
 
-    success, that_event = behaviour.delete_event(request["id"])
+    event_id = int(request["id"])
+
+    success = behaviour.delete_sphere_from_event(event_id)
+    if not success:
+        return EventResponse(500, method)
+
+    success, that_event = behaviour.delete_event(event_id)
+
     if success:
         return EventResponse(200, method, that_event)
     return EventResponse(500, method, that_event)
+
+
+def add_sphere(method: str, request: dict):
+    """Добавление сферы со всеми необходимыми проверками."""
+    if not all_params_in(SphereResponse.needed_params_to_add, request):
+        return SphereResponse(400, method)
+
+    user = behaviour.get_user_by_token(request["token"])
+    if not user:
+        return SphereResponse(403, method)
+    if user.email not in users_have_permission:
+        return SphereResponse(403, method)
+
+    success, new_sphere = behaviour.add_sphere(sphere_name=request["name"])
+    if not success:
+        return SphereResponse(500, method)
+    return SphereResponse(200, method, new_sphere)
+
+
+def delete_sphere(method: str, request: dict):
+    """Удаление сферы с необходимыми проверками."""
+    if not all_params_in(SphereResponse.needed_params_to_delete, request):
+        return SphereResponse(400, method)
+
+    user = behaviour.get_user_by_token(request["token"])
+    if not user:
+        return SphereResponse(403, method)
+    if user.email not in users_have_permission:
+        return SphereResponse(403, method)
+
+    sphere_id = int(request["id"])
+
+    success = behaviour.delete_links_for_spheres(sphere_id)
+    if not success:
+        return SphereResponse(500, method)
+
+    success, that_sphere = behaviour.del_sphere_by_id(sphere_id)
+    if success:
+        return SphereResponse(200, method, that_sphere)
+    return SphereResponse(500, method, that_sphere)
 
 
 def profession(method: str, request: dict):
@@ -181,7 +271,13 @@ def profession(method: str, request: dict):
 
 
 def spheres(method: str, request: dict):
-    pass
+    """Ответ для /api/spheres"""
+    if method == "POST":
+        return add_sphere(method, request)
+    elif method == "DELETE":
+        return delete_sphere(method, request)
+
+    return Response(404, method)
 
 
 def event(method: str, request: dict):

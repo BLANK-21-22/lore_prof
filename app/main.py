@@ -176,3 +176,9 @@ def api_profession():
 def api_meet():
     request_json = dict(request.values)
     return api.event(request.method, request_json).__dict__()
+
+
+@app.route("/api/sphere", methods=["POST", "DELETE"])
+def api_spheres():
+    request_json = dict(request.values)
+    return api.spheres(request.method, request_json).__dict__()

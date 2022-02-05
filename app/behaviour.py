@@ -295,20 +295,18 @@ def add_sphere_to_event(sphere_id: int, event_id: int):
     )
 
 
-def delete_sphere_from_event(sphere_id: int, event_id: int):
+def delete_sphere_from_event(event_id: int, sphere_id: int = "*"):
     session: SessionObject
     with Session(expire_on_commit=False) as session:
         query: Query
         query = session.query(EventSpheres)
         query = query.filter(EventSpheres.event_id == event_id)
-        query = query.filter(EventSpheres.sphere_id == sphere_id)
-
-        result = query.first()
-        if result:
-            session.delete(result)
-            session.commit()
-            return True, result
-        return False, None
+        if isinstance(sphere_id, int):
+            query.filter(EventSpheres.sphere_id == sphere_id).delete()
+        else:
+            query.delete()
+        session.commit()
+    return True
 
 
 @add_object
@@ -319,19 +317,18 @@ def add_sphere_to_profession(profession_id: int, sphere_id: int):
     )
 
 
-def delete_sphere_from_profession(profession_id: int, sphere_id: int):
+def delete_sphere_from_profession(profession_id: int, sphere_id: int = "*"):
     session: SessionObject
     with Session(expire_on_commit=False) as session:
         query: Query
         query = session.query(ProfessionSphere)
         query = query.filter(ProfessionSphere.prof_id == profession_id)
-        query = query.filter(ProfessionSphere.sphere_id == sphere_id)
-        result = query.first()
-        if result:
-            session.delete(result)
-            session.commit()
-            return True, result
-        return False, None
+        if isinstance(sphere_id, int):
+            query.filter(ProfessionSphere.sphere_id == sphere_id).delete()
+        else:
+            query.delete()
+        session.commit()
+    return True
 
 
 @add_object
@@ -355,6 +352,16 @@ def delete_photo_from_profession(profession_id: int, link: str):
             session.commit()
             return True, result
         return False, None
+
+
+def delete_links_for_spheres(sphere_id: int):
+    session: SessionObject
+    with Session() as session:
+        query = session.query(EventSpheres).filter(EventSpheres.sphere_id == sphere_id)
+        query.delete()
+        query = session.query(ProfessionSphere).filter(ProfessionSphere.sphere_id == sphere_id)
+        query.delete()
+    return True
 
 
 def get_event(event_id: int):
