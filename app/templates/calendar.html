@@ -21,15 +21,14 @@
     <form class="d-flex" id="input-wrapper">
       <input class="form-control me-2" id="inputSearch" type="search" placeholder="Что ищем?" aria-label="Search" name="query">
     </form>
-
         {% from 'meetMacr.html' import meet %}
-        {{ meet() }}
-
-        {% from 'meetMacr.html' import meet %}
-        {{ meet() }}
-
-        {% from 'meetMacr.html' import meet %}
-        {{ meet() }}
+        {% for event in events %}
+        {{
+        meet(
+            event.id, event.name, event.date_of_the_event, event.description,
+            event.place, event.form_of_the_event)
+        }}
+        {% endfor %}
 
     </main>
     </div>

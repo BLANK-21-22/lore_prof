@@ -21,35 +21,33 @@
             <div class="meetDate">
                 <p><b>Дата митапа</b>
             	<br>
-            	2 марта 2022
+                    {{ event.date_of_the_event }}
             	</p>
             </div>
             <div class="meetTime">
                 <p><b>Время</b>
                 <br>
-                14:30 мск
+                XXX
             	</p>
             </div>
             <div class="meetLen">
                 <p><b>Длительность</b>
                 <br>
-                1:30
+                XXX
             	</p>
             </div>
             <div class="meetQualPeop">
                 <p><b>Зарегистрировано</b>
                 <br>
-                0/40
+                    XXX
             	</p>
             </div>
 
         </div>
 	    
-	<div class="meetDescription"
-	</div>
+	<div class="meetDescription">{{ event.description|safe }}</div>
     </main>
 	</div>
-
             {% from 'footerMacr.html' import footer %}
 
             {{ footer() }}

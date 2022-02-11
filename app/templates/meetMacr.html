@@ -1,36 +1,34 @@
-{% macro meet() %}
+{% macro meet(event_id, name, date_of_event, description, place, event_form) %}
 
  <div class="meet">
             <div class="meetAboutTime">
                 <div class="meetTime">
                     <p class="parTime">
-                        15:00 мск
+                        XXX
                     </p>
                 </div>
                 <div class="meetTime">
                     <p class="parTime">
-                        Вт
+                        XXX
                     </p>
                 </div>
                 <div class="meetTime meetDate">
                     <p class="parTime">
-                        XX
-                        <br>
-                        Января
+                        {{ date_of_event }}
                     </p>
                 </div>
             </div>
             <div class="meetAbout">
                 <div class="meetName">
-                    <h3 onclick="window.location.href = './aboutMeet.html';">
-                        Некое название митапа
+                    <h3 onclick="window.location.href = './aboutMeet/{{event_id}}';">
+                        {{ name }}
                     </h3>
                 </div>
                 <div class="meetInfo">
                     <p>
-                        Нечто о митапе.
+                        {{ description }}
                     </p>
-                    <button class="meetDetails" onclick="window.location.href = './aboutMeet.html';">
+                    <button class="meetDetails" onclick="window.location.href = './aboutMeet/{{event_id}}';">
                         Подробнее
                     </button>
                 </div>

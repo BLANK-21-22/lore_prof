@@ -1,7 +1,7 @@
 import datetime
 
 from flask import render_template, redirect
-from flask import Flask, session, request
+from flask import Flask, session, request, abort
 from behaviour import get_user_by_token, authenticate_user, add_user
 from configs import token_expire_date, events_thru_to_date_in_seconds
 import behaviour
@@ -69,9 +69,13 @@ def not_found(error):
 def get_meet(meet_id: int):
     url = f"/aboutMeet/{meet_id}"
     account = authorize(url)
-    meeting = behaviour.get_event(meet_id)
+    event = behaviour.get_event(meet_id)
     error = session.get("error")
-    return render_template("aboutMeet.html", account=account, meeting=meeting, error=error)
+
+    if not event:
+        return abort(404)
+    event = event["event"]
+    return render_template("aboutMeet.html", account=account, event=event, error=error)
 
 
 @app.route("/archive", methods=["GET"])
@@ -120,8 +124,13 @@ def get_profession(profession_id: int):
     account = authorize(url)
     profession = behaviour.get_profession(profession_id)
     error = session.get("error")
-    print(profession)
-    return render_template("aboutProf.html", account=account, profession=profession["profession"], error=error)
+
+    return render_template(
+        "aboutProf.html",
+        account=account,
+        profession=profession["profession"],
+        error=error
+    )
 
 
 @app.route("/calendar", methods=["GET"])
@@ -136,8 +145,10 @@ def get_calendar():
     to_date = from_date + to_date
     events = behaviour.get_events(10, 0, from_date, to_date, query)
     error = session.get("error")
+
     if query and not events:
         return render_template("notFoundSearch.html", account=account)
+
     return render_template("calendar.html", account=account, events=events, error=error)
 
 
