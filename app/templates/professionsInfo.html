@@ -20,84 +20,24 @@
 
     <main>
         <form class="d-flex" id="input-wrapper">
-      <input class="form-control me-2" id="inputSearch" type="search" placeholder="Что ищем?" aria-label="Search">
+      <input class="form-control me-2" id="inputSearch" type="search" placeholder="Что ищем?" aria-label="Search" name="query">
     </form>
+        {% for i, _ in enumerate(professions[::3]) %}
         <div class="cardRow">
-            {% for profession in professions %}
-                <div class="card">
-                    <img src="{{ get_first_picture(profession) }}" class="cardImg" alt="Профессия">
-                    <div class="cardBody">
-                    <h3 class="cardTitle">{{ profession.name }}</h3>
-                    <p class="cardText">{{ get_short_article(profession) }}</p>
-                        <div class="divBtnMore">
-                            <a href="/profession/{{ profession.id }}" class="btnMore">Подробнее</a>
+                {% for profession in professions[i:i+4] %}
+                    <div class="card">
+                        <img src="{{ get_first_picture(profession.id) if get_first_picture(profession.id) else url_for('static', filename='/common_photos/logo.png') }}" class="cardImg" alt="Профессия">
+                        <div class="cardBody">
+                        <h3 class="cardTitle">{{ profession.name }}</h3>
+                        <p class="cardText">{{ get_short_article(profession.article) }}</p>
+                            <div class="divBtnMore">
+                                <a href="/profession/{{ profession.id }}" class="btnMore">Подробнее</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-            <div class="card">
-                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
-                <div class="cardBody">
-                    <h3 class="cardTitle">Профессия</h3>
-                    <p class="cardText">Что-то о профе в 1-2 предл.</p>
-                    <div class="divBtnMore">
-                        <a href="/profession" class="btnMore">Подробнее</a>
-                    </div>
-                 </div>
-            </div>
-            <div class="card">
-                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
-                <div class="cardBody">
-                    <h3 class="cardTitle">Профессия</h3>
-                    <p class="cardText">Что-то о профе в 1-2 предл.</p>
-                    <div class="divBtnMore">
-                        <a href="/profession" class="btnMore">Подробнее</a>
-                    </div>
-                 </div>
-            </div>
-         <div class="card">
-                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
-                <div class="cardBody">
-                    <h3 class="cardTitle">Профессия</h3>
-                    <p class="cardText">Что-то о профе в 1-2 предл.</p>
-                    <div class="divBtnMore">
-                        <a href="/profession" class="btnMore">Подробнее</a>
-                    </div>
-                 </div>
-         </div>
-                <div class="card">
-                    <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
-                    <div class="cardBody">
-                        <h3 class="cardTitle">Профессия</h3>
-                        <p class="cardText">Что-то о профе в 1-2 предл.</p>
-                        <div class="divBtnMore">
-                            <a href="/profession" class="btnMore">Подробнее</a>
-                        </div>
-                     </div>
-                </div>
-            </div>
-            <div class="cardRow">
-                <div class="card">
-                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
-                <div class="cardBody">
-                    <h3 class="cardTitle">Профессия</h3>
-                    <p class="cardText">Что-то о профе в 1-2 предл.</p>
-                    <div class="divBtnMore">
-                        <a href="/profession" class="btnMore">Подробнее</a>
-                    </div>
-                 </div>
-            </div>
-            <div class="card">
-                <img src="{{url_for('static', filename='common_photos/Prof-htmlCode.jpg')}}" class="cardImg" alt="Профессия">
-                <div class="cardBody">
-                    <h3 class="cardTitle">Профессия</h3>
-                    <p class="cardText">Что-то о профе в 1-2 предл.</p>
-                    <div class="divBtnMore">
-                        <a href="/profession" class="btnMore">Подробнее</a>
-                    </div>
-                 </div>
-            </div>
+                {% endfor %}
         </div>
+        {% endfor %}
     </main>
     </div>
 

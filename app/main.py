@@ -41,6 +41,14 @@ def authorize(url_was_visited: str):
     return account
 
 
+def get_first_picture(profession_id: int):
+    profession = behaviour.get_profession(profession_id)
+    if profession:
+        if profession["photos"]:
+            return profession["photos"][0]
+    return None
+
+
 @app.route("/", methods=["GET", "POST"])
 @app.route("/main", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
@@ -70,10 +78,16 @@ def get_meet(meet_id: int):
 def get_archive():
     url = "/archive"
     account = authorize(url)
+
+    query = dict(request.values).get("query")
     from_date = datetime.datetime(year=2020, month=1, day=1)
     to_date = datetime.datetime.now()
-    meetings = behaviour.get_events(10, 0, from_date, to_date)
+    meetings = behaviour.get_events(10, 0, from_date, to_date, query)
     error = session.get("error")
+
+    if query and not meetings:
+        return render_template("notFoundSearch.html", account=account)
+
     return render_template("archive.html", account=account, meetings=meetings, error=error)
 
 
@@ -81,9 +95,23 @@ def get_archive():
 def get_professions():
     url = "/professionsInfo"
     account = authorize(url)
-    professions = behaviour.get_all_professions(10, 0)
+    query = dict(request.values).get("query")
+
+    professions = behaviour.get_all_professions(10, 0, query)
     error = session.get("error")
-    return render_template("professionsInfo.html", account=account, professions=professions, error=error)
+
+    if query and not professions:
+        return render_template("notFoundSearch.html", account=account)
+
+    return render_template(
+        "professionsInfo.html",
+        account=account,
+        professions=professions,
+        error=error,
+        get_first_picture=get_first_picture,
+        get_short_article=lambda x: x[:50],
+        enumerate=enumerate
+    )
 
 
 @app.route("/profession/<int:profession_id>", methods=["GET"])
@@ -92,20 +120,24 @@ def get_profession(profession_id: int):
     account = authorize(url)
     profession = behaviour.get_profession(profession_id)
     error = session.get("error")
-    return render_template("aboutProf.html", account=account, profession=profession, error=error)
+    print(profession)
+    return render_template("aboutProf.html", account=account, profession=profession["profession"], error=error)
 
 
 @app.route("/calendar", methods=["GET"])
 def get_calendar():
     url = "/calendar"
     account = authorize(url)
+    query = dict(request.values).get("query")
     from_date = datetime.datetime.now()
     to_date = datetime.timedelta(
         seconds=events_thru_to_date_in_seconds
     )
     to_date = from_date + to_date
-    events = behaviour.get_events(10, 0, from_date, to_date)
+    events = behaviour.get_events(10, 0, from_date, to_date, query)
     error = session.get("error")
+    if query and not events:
+        return render_template("notFoundSearch.html", account=account)
     return render_template("calendar.html", account=account, events=events, error=error)
 
 
