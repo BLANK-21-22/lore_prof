@@ -4,7 +4,7 @@ import behaviour
 from models import Profession, Event, Sphere
 from configs import event_date_format
 
-users_have_permission = ["test@specialdomain.com", ]
+users_have_permission = ["test@gmail.com", ]
 
 errors_dict = {
     400: "One or more params missed",
@@ -88,6 +88,7 @@ class EventResponse(Response):
 class SphereResponse(Response):
     needed_params_to_add = ["name", "token"]
     needed_params_to_delete = ["id", "token"]
+    needed_params_to_get = ["token", "name"]
 
     def __init__(self, code: int, method: str, new_sphere: Sphere = None):
         super(SphereResponse, self).__init__(code, method)
@@ -170,8 +171,10 @@ def add_event(method: str, request: dict):
         return EventResponse(403, method)
     if user.email not in users_have_permission:
         return EventResponse(403, method)
-
-    date_of_the_event = datetime.datetime.strptime(request["date_of_the_event"], event_date_format)
+    try:
+        date_of_the_event = datetime.datetime.strptime(request["date_of_the_event"], event_date_format)
+    except ValueError:
+        return EventResponse(400, method)
 
     success, new_event = behaviour.add_event(
         event_name=request["name"],
@@ -220,6 +223,24 @@ def delete_event(method: str, request: dict):
     return EventResponse(500, method, that_event)
 
 
+def get_sphere(method: str, request: dict):
+    """Получение информации об одной только сфере."""
+    if not all_params_in(SphereResponse.needed_params_to_get, request):
+        return SphereResponse(400, method)
+
+    user = behaviour.get_user_by_token(request["token"])
+    if not user:
+        return SphereResponse(403, method)
+    if user.email not in users_have_permission:
+        return SphereResponse(403, method)
+
+    sphere = behaviour.get_sphere_by_name(request["name"])
+    if not sphere:
+        return SphereResponse(404, method)
+
+    return SphereResponse(200, method, sphere)
+
+
 def add_sphere(method: str, request: dict):
     """Добавление сферы со всеми необходимыми проверками."""
     if not all_params_in(SphereResponse.needed_params_to_add, request):
@@ -229,6 +250,7 @@ def add_sphere(method: str, request: dict):
     if not user:
         return SphereResponse(403, method)
     if user.email not in users_have_permission:
+        print("Wrong email.", user.email)
         return SphereResponse(403, method)
 
     success, new_sphere = behaviour.add_sphere(sphere_name=request["name"])
@@ -276,6 +298,8 @@ def spheres(method: str, request: dict):
         return add_sphere(method, request)
     elif method == "DELETE":
         return delete_sphere(method, request)
+    elif method == "GET":
+        return get_sphere(method, request)
 
     return Response(404, method)
 

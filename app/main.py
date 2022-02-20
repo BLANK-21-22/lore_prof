@@ -125,10 +125,31 @@ def get_profession(profession_id: int):
     profession = behaviour.get_profession(profession_id)
     error = session.get("error")
 
+    if not profession:
+        return abort(404)
+
     return render_template(
         "aboutProf.html",
         account=account,
         profession=profession["profession"],
+        error=error
+    )
+
+
+@app.route("/event/<int:event_id>", methods=["GET"])
+def get_event(event_id: int):
+    url = f"/event/{event_id}"
+    account = authorize(url)
+    event = behaviour.get_event(event_id)
+    error = session.get("error")
+
+    if not event:
+        return abort(404)
+
+    return render_template(
+        "aboutMeet.html",
+        account=account,
+        event=event["event"],
         error=error
     )
 
@@ -221,7 +242,7 @@ def api_meet():
     return api.event(request.method, request_json).__dict__()
 
 
-@app.route("/api/sphere", methods=["POST", "DELETE"])
+@app.route("/api/sphere", methods=["GET", "POST", "DELETE"])
 def api_spheres():
     request_json = dict(request.values)
     return api.spheres(request.method, request_json).__dict__()

@@ -21,18 +21,11 @@
         <form class="d-flex" id="input-wrapper">
             <input class="form-control me-2" id="inputSearch" type="search" placeholder="Что ищем?" aria-label="Search" name="query">
         </form>
-        
         {% from 'archiveMeetMacr.html' import pastMeet %}
-            {{ pastMeet() }}
-        
-        {% from 'archiveMeetMacr.html' import pastMeet %}
-            {{ pastMeet() }}
-        
-        {% from 'archiveMeetMacr.html' import pastMeet %}
-            {{ pastMeet() }}
-        
-        {% from 'archiveMeetMacr.html' import pastMeet %}
-            {{ pastMeet() }}
+
+        {% for meeting in meetings %}
+            {{ pastMeet(meeting) }}
+        {% endfor %}
     </main>
     </div>
 

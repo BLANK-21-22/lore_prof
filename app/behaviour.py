@@ -67,6 +67,16 @@ def del_sphere_by_id(sphere_id: int):
     return Sphere, sphere_id
 
 
+def get_sphere_by_name(sphere_name: str):
+    session: SessionObject
+    with Session() as session:
+        query = session.query(Sphere).filter(Sphere.name == sphere_name)
+        spheres = query.all()
+        if not spheres:
+            return None
+    return spheres[0]
+
+
 def get_all_spheres():
     session: SessionObject
     session = Session()

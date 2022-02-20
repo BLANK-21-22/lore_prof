@@ -2,7 +2,7 @@
 from os import environ
 
 flask_configs = {
-    "DEBUG": True,
+    "DEBUG": False,
     "CACHE_TYPE": "SimpleCache",
     "CACHE_DEFAULT_TIMEOUT": 150
 }
