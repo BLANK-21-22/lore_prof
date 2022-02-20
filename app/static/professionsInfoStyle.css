@@ -1,15 +1,15 @@
 #input-wrapper {
 	display: inline-block;
 	position: relative;
-	margin-bottom: 20px;
+	margin-bottom: 1.3rem;
+	margin-top: 1rem;
 }
 
 #input-wrapper::after {
 	content: attr(data-text);
 	line-height: 0;
-	height: 0;
 	max-width: 100%;
-	border-bottom: 2px solid #fff;
+	border-bottom: 0.2rem solid #fff;
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -22,35 +22,35 @@
 #inputSearch {
 	color: #ddd;
 	border: none;
-	padding: 0;
+	margin-left: 8rem;
 	border-radius: 0;
 	outline: none;
 	width: auto;
 	min-width: 100%;
-	line-height: 3em;
-	border-bottom: 2px solid #333333;
+	line-height: 2rem;
+	border-bottom: 0.17rem solid #333333;
 	background-color: transparent;
 }
 
 .cardRow {
 	display: flex;
 	justify-content: space-around;
-	margin-bottom: 12px;
+	margin-bottom: 1rem;
 }
 
 .card {
 	background-color: #0c0e0f;
 	width: auto;
-	padding: 5px;
-	box-shadow: 0 4px 8px 0 black;
-	transition: 0.3s;
-	border-radius: 5px;
-	border: solid 1px #FFD700;
+	padding: 0.4rem;
+	box-shadow: 0 0.3rem 0.5rem 0 black;
+	border-radius: 0.3rem;
+	border: solid 0.1rem #FFD700;
+	max-width: 17rem;
 }
 
 .cardImg {
 	width: 17rem;
-	border-radius: 5px 5px 0 0;
+	border-radius: 0.3rem 0.3rem 0 0;
 }
 
 .cardBody {
@@ -58,8 +58,8 @@
 }
 .cardTitle {
 	text-align: center;
-	margin: 0;
-	border-bottom: 4px dotted black;
+	margin: 0.1rem 0 0 0;
+	border-bottom: 0.3rem dotted black;
 }
 
 .cardText {
@@ -77,11 +77,11 @@
 }
 
 .btnMore {
-	font-size: 12px;
+	font-size: 0.8rem;
 	text-decoration: none;
-	padding: 3px;
+	padding: 0.1rem;
 	background-color: inherit;
-	border: 1px solid #d0ad00;
-	border-radius: 5px;
+	border: 0.1rem solid #d0ad00;
+	border-radius: 0.3rem;
 	color: #d0ad00;
 }
