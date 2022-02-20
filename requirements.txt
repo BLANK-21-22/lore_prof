@@ -6,3 +6,4 @@ Flask-WTF==1.0.0
 Flask-Caching==1.10.1
 Flask-Session
 requests
+psycopg2
