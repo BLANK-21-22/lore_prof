@@ -2,6 +2,7 @@
 	display: inline-block;
 	position: relative;
 	margin-bottom: 1.3rem;
+	margin-top: 1rem;
 }
 
 #input-wrapper::after {
