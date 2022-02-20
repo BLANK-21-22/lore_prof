@@ -12,9 +12,9 @@ database_configs = {
     "recreate_database": False
 }
 
-if environ.get("DATABASE_URL"):
+if environ.get("DB_URL"):
     print("I am connecting to Database!")
-    database_configs["url"] = environ.get("DATABASE_URL")
+    database_configs["url"] = environ.get("DB_URL")
 
 token_size = 64
 token_symbols = "qwertyuiopasdfghjklzxcvbnm1234567890"
