@@ -1,13 +1,18 @@
 .indexImg {
     float: right;
-    width: 500px;
+    width: 32.5rem;
     height: auto;
 }
 
-.aboveline {
-    margin-top: 70px;
+.aboveLine {
+    margin-top: 5rem;
 }
 
-.abutLore {
-    padding-right: 2%;
+.aboutLore {
+    max-width: 45rem;
+}
+
+hr {
+    margin: 0;
+    max-width: 44rem;
 }
