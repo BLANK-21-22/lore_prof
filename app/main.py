@@ -3,13 +3,14 @@ import datetime
 from flask import render_template, redirect
 from flask import Flask, session, request, abort
 from behaviour import get_user_by_token, authenticate_user, add_user
-from configs import token_expire_date, events_thru_to_date_in_seconds
+from configs import token_expire_date, events_thru_to_date_in_seconds, token_symbols, token_size
 import behaviour
 import api
 from hashlib import md5
+from random import choice as random_choice
 
 app = Flask(__name__)
-app.secret_key = "22JJJd8888**eds___Dss09((((ejwsk4ll"
+app.secret_key = "".join([random_choice(token_symbols) for _ in range(token_size)])
 
 
 def hash_password(password: str):
@@ -246,3 +247,16 @@ def api_meet():
 def api_spheres():
     request_json = dict(request.values)
     return api.spheres(request.method, request_json).__dict__()
+
+
+@app.before_first_request
+def initializing():
+    from configs import admin_user, admin_password, admin_name
+    hashed_pass = hash_password(admin_password)
+    success, token = authenticate_user(admin_user, hashed_pass)
+    if not success:
+        add_user(
+            full_name=admin_name,
+            email=admin_user,
+            hashed_password=hashed_pass
+        )

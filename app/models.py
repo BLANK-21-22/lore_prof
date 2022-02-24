@@ -18,7 +18,7 @@ class User(Base):
     id = Column("id", Integer, autoincrement=True)
     full_name = Column("full_name", VARCHAR(100))
     email = Column("email", VARCHAR(255))
-    hash_password = Column("hash_password", VARCHAR(60))
+    hash_password = Column("hash_password", Text)
 
     __table_args__ = (
         PrimaryKeyConstraint("id"),
@@ -48,7 +48,7 @@ class Event(Base):
     date_of_the_event = Column("date_of_the_event", TIMESTAMP)
     description = Column("description", Text)
     place = Column("place", VARCHAR(255))
-    form_of_the_event = Column("form_of_the_event", VARCHAR(5))
+    form_of_the_event = Column("form_of_the_event", VARCHAR(15))
 
     __table_args__ = (
         PrimaryKeyConstraint("id"),
@@ -132,7 +132,7 @@ class ProfessionPhotos(Base):
     __tablename__ = "professions_photos"
 
     prof_id = Column("prof_id", Integer)
-    link = Column("link", VARCHAR(25))
+    link = Column("link", Text)
 
     __table_args__ = (
         PrimaryKeyConstraint("prof_id", "link"),

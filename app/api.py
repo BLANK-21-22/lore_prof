@@ -2,9 +2,9 @@ import datetime
 
 import behaviour
 from models import Profession, Event, Sphere
-from configs import event_date_format
+from configs import event_date_format, admin_user
 
-users_have_permission = ["test@gmail.com", ]
+users_have_permission = [admin_user, ]
 
 errors_dict = {
     400: "One or more params missed",
@@ -90,9 +90,10 @@ class SphereResponse(Response):
     needed_params_to_delete = ["id", "token"]
     needed_params_to_get = ["token", "name"]
 
-    def __init__(self, code: int, method: str, new_sphere: Sphere = None):
+    def __init__(self, code: int, method: str, new_sphere: Sphere = None, comments: str = None):
         super(SphereResponse, self).__init__(code, method)
         self.sphere = new_sphere
+        self.comments = comments
 
     def __dict__(self):
         response_dict = super(SphereResponse, self).__dict__()
@@ -101,6 +102,8 @@ class SphereResponse(Response):
             sphere_dict["id"] = self.sphere.id
             sphere_dict["name"] = self.sphere.name
             response_dict["sphere"] = sphere_dict
+        if self.comments:
+            response_dict["comments"] = self.comments
         return response_dict
 
 
@@ -250,12 +253,11 @@ def add_sphere(method: str, request: dict):
     if not user:
         return SphereResponse(403, method)
     if user.email not in users_have_permission:
-        print("Wrong email.", user.email)
         return SphereResponse(403, method)
 
     success, new_sphere = behaviour.add_sphere(sphere_name=request["name"])
     if not success:
-        return SphereResponse(500, method)
+        return SphereResponse(500, method, comments=new_sphere)
     return SphereResponse(200, method, new_sphere)
 
 

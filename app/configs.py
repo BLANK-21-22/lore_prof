@@ -12,6 +12,10 @@ database_configs = {
     "recreate_database": False
 }
 
+admin_user = "testMe@gmail.com"
+admin_name = "testEr"
+admin_password = "MyStaticPassword, bro, calm down... I don't know for whom this one..."
+
 if environ.get("DB_URL"):
     print("I am connecting to Database!")
     database_configs["url"] = environ.get("DB_URL")

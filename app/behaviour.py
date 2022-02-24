@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session as SessionObject, Query
 from random import choice as random_choice
 from configs import token_symbols, token_size
 
-# from datetime import datetime, timedelta
 import datetime
 
 
@@ -24,13 +23,13 @@ def add_object(func_to_create):
         session = Session(expire_on_commit=False)
 
         result_object = func_to_create(*args, **kwargs)
-        if result_object:
+        if result_object and not isinstance(result_object, str):
             session.add(result_object)
             session.commit()
 
             session.close()
             return True, result_object
-        return False, None
+        return False, result_object
     return wrapper
 
 
@@ -58,6 +57,9 @@ def delete_object_by_id(func_to_get):
 
 @add_object
 def add_sphere(sphere_name: str):
+    if len(sphere_name) >= 20:
+        return "Название сферы должны быть менее 20 символов."
+
     new_sphere = Sphere(name=sphere_name)
     return new_sphere
 
@@ -89,6 +91,9 @@ def get_all_spheres():
 
 @add_object
 def add_profession(name: str, article: str):
+    if len(name) >= 25:
+        return "Название профессии должно быть менее 25 символов."
+
     new_profession = Profession(
         name=name,
         article=article
@@ -119,14 +124,19 @@ def get_all_professions(limit: int, offset: int, query: str):
 
 @add_object
 def add_user(full_name: str, email: str, hashed_password: str):
-    if check_free_email(email):
-        new_user = User(
-            full_name=full_name,
-            email=email,
-            hash_password=hashed_password
-        )
-        return new_user
-    return None
+    if not check_free_email(email):
+        return "Почта занята."
+    if len(email) >= 255:
+        return "Количество символов почты не должно превышать 255 символов."
+    if len(full_name) >= 100:
+        return "Полное имя должно быть менее 100 символов."
+
+    new_user = User(
+        full_name=full_name,
+        email=email,
+        hash_password=hashed_password
+    )
+    return new_user
 
 
 @delete_object_by_id
@@ -216,6 +226,13 @@ def add_event(event_name: str, date_of_the_event: datetime,
               description: str, place: str,
               form_of_the_event: str):
     """Добавление мероприятия."""
+    if len(event_name) >= 50:
+        return "Название мероприятия должно быть менее 50 символов."
+    if len(place) >= 255:
+        return "Местоположение должно быть менее 255 символов."
+    if len(form_of_the_event) >= 15:
+        return "Форма проведения мероприятия должна быть менее 15 символов."
+
     return Event(
         name=event_name,
         date_of_the_event=date_of_the_event,
