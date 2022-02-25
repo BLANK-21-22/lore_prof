@@ -5,12 +5,12 @@ from models import EventRegistered, ProfessionSphere
 from models import Profession, ProfessionPhotos, User, Sphere
 from models import Token
 from models import Session
-from sqlalchemy.orm import Session as SessionObject, Query
-
-from random import choice as random_choice
+import answers
 from configs import token_symbols, token_size
 
+from sqlalchemy.orm import Session as SessionObject, Query
 import datetime
+from random import choice as random_choice
 
 
 def add_object(func_to_create):
@@ -58,7 +58,7 @@ def delete_object_by_id(func_to_get):
 @add_object
 def add_sphere(sphere_name: str):
     if len(sphere_name) >= 20:
-        return "Название сферы должны быть менее 20 символов."
+        return answers.sphere_name_max_limit
 
     new_sphere = Sphere(name=sphere_name)
     return new_sphere
@@ -92,7 +92,7 @@ def get_all_spheres():
 @add_object
 def add_profession(name: str, article: str):
     if len(name) >= 25:
-        return "Название профессии должно быть менее 25 символов."
+        return answers.profession_name_len_limit
 
     new_profession = Profession(
         name=name,
@@ -125,11 +125,11 @@ def get_all_professions(limit: int, offset: int, query: str):
 @add_object
 def add_user(full_name: str, email: str, hashed_password: str):
     if not check_free_email(email):
-        return "Почта занята."
+        return answers.busy_email
     if len(email) >= 255:
-        return "Количество символов почты не должно превышать 255 символов."
+        return answers.email_len_limit
     if len(full_name) >= 100:
-        return "Полное имя должно быть менее 100 символов."
+        return answers.full_name_len_limit
 
     new_user = User(
         full_name=full_name,
@@ -227,11 +227,11 @@ def add_event(event_name: str, date_of_the_event: datetime,
               form_of_the_event: str):
     """Добавление мероприятия."""
     if len(event_name) >= 50:
-        return "Название мероприятия должно быть менее 50 символов."
+        return answers.event_name_len_limit
     if len(place) >= 255:
-        return "Местоположение должно быть менее 255 символов."
+        return answers.event_place_len_limit
     if len(form_of_the_event) >= 15:
-        return "Форма проведения мероприятия должна быть менее 15 символов."
+        return answers.event_form_len_limit
 
     return Event(
         name=event_name,
@@ -441,6 +441,7 @@ def get_profession(profession_id: int):
         query = query.outerjoin(ProfessionSphere, ProfessionSphere.prof_id == Profession.id)
         query = query.outerjoin(ProfessionPhotos, ProfessionPhotos.prof_id == Profession.id)
         query = query.filter(Profession.id == profession_id)
+
         result = query.all()
         if result:
             beauty_result = {

@@ -50,20 +50,19 @@ def get_first_picture(profession_id: int):
     return None
 
 
+@app.errorhandler(404)
+def not_found(error):
+    account = authorize("")
+    return render_template("notFound.html", account=account, error=error)
+
+
 @app.route("/", methods=["GET", "POST"])
 @app.route("/main", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 def main_page():
     url = "/main"
     account = authorize(url)
-    error = session.get("error")
-    return render_template("index.html", account=account, error=error)
-
-
-@app.errorhandler(404)
-def not_found(error):
-    account = authorize("")
-    return render_template("notFound.html", account=account, error=error)
+    return render_template("index.html", account=account)
 
 
 @app.route("/aboutMeet/<int:meet_id>", methods=["GET"])
@@ -71,12 +70,11 @@ def get_meet(meet_id: int):
     url = f"/aboutMeet/{meet_id}"
     account = authorize(url)
     event = behaviour.get_event(meet_id)
-    error = session.get("error")
 
     if not event:
         return abort(404)
     event = event["event"]
-    return render_template("aboutMeet.html", account=account, event=event, error=error)
+    return render_template("aboutMeet.html", account=account, event=event)
 
 
 @app.route("/archive", methods=["GET"])
@@ -88,22 +86,20 @@ def get_archive():
     from_date = datetime.datetime(year=2020, month=1, day=1)
     to_date = datetime.datetime.now()
     meetings = behaviour.get_events(10, 0, from_date, to_date, query)
-    error = session.get("error")
 
     if query and not meetings:
         return render_template("notFoundSearch.html", account=account)
 
-    return render_template("archive.html", account=account, meetings=meetings, error=error)
+    return render_template("archive.html", account=account, meetings=meetings)
 
 
 @app.route("/professionsInfo", methods=["GET"])
 def get_professions():
     url = "/professionsInfo"
     account = authorize(url)
-    query = dict(request.values).get("query")
 
+    query = dict(request.values).get("query")
     professions = behaviour.get_all_professions(10, 0, query)
-    error = session.get("error")
 
     if query and not professions:
         return render_template("notFoundSearch.html", account=account)
@@ -112,7 +108,6 @@ def get_professions():
         "professionsInfo.html",
         account=account,
         professions=professions,
-        error=error,
         get_first_picture=get_first_picture,
         get_short_article=lambda x: x[:50],
         enumerate=enumerate
@@ -123,8 +118,8 @@ def get_professions():
 def get_profession(profession_id: int):
     url = f"/profession/{profession_id}"
     account = authorize(url)
+
     profession = behaviour.get_profession(profession_id)
-    error = session.get("error")
 
     if not profession:
         return abort(404)
@@ -133,7 +128,6 @@ def get_profession(profession_id: int):
         "aboutProf.html",
         account=account,
         profession=profession["profession"],
-        error=error
     )
 
 
@@ -142,7 +136,6 @@ def get_event(event_id: int):
     url = f"/event/{event_id}"
     account = authorize(url)
     event = behaviour.get_event(event_id)
-    error = session.get("error")
 
     if not event:
         return abort(404)
@@ -151,7 +144,6 @@ def get_event(event_id: int):
         "aboutMeet.html",
         account=account,
         event=event["event"],
-        error=error
     )
 
 
@@ -166,12 +158,11 @@ def get_calendar():
     )
     to_date = from_date + to_date
     events = behaviour.get_events(10, 0, from_date, to_date, query)
-    error = session.get("error")
 
     if query and not events:
         return render_template("notFoundSearch.html", account=account)
 
-    return render_template("calendar.html", account=account, events=events, error=error)
+    return render_template("calendar.html", account=account, events=events)
 
 
 # Ниже блоки определяют работу с аккаунтом и получение токена.
@@ -188,47 +179,10 @@ def logining_request():
 
     success, token = authenticate_user(login, hashed_password)
 
-    if "url" in session:
-        response = redirect(session["url"])
-    else:
-        response = redirect("/")
     if success:
-        set_token(response, token.token)
+        return {"token": token.token, "expire_date": token.expiration_date}
     else:
-        session.setdefault("error", "Неверный логин или пароль.")
-
-    return response
-
-
-@app.route("/registration", methods=["GET", "POST"])
-def register_request():
-    if request.method == "GET":
-        return render_template("registration.html", account=None)
-    if request.method == "POST":
-        params = ["name", "email", "password"]
-        request_dict = dict(request.values)
-        if not all([x in request_dict for x in params]):
-            return redirect("/registration")
-
-        hashed_password = hash_password(request_dict["password"])
-        success, user = add_user(
-            full_name=request_dict["name"],
-            email=request_dict["email"],
-            hashed_password=hashed_password
-        )
-        if not success:
-            """Аккаунт уже был создан ранее."""
-            return render_template("registration.html", account=None, error="")
-
-        success, token = authenticate_user(request_dict["email"], hashed_password)
-        if not success:
-            """Unknown error."""
-            return redirect("/registration")
-
-        response = redirect("/")
-        set_token(response, token.token)
-
-        return response
+        return {"error": "Неверный логин или пароль."}
 
 
 @app.route("/api/profession", methods=["POST", "DELETE"])
@@ -252,8 +206,10 @@ def api_spheres():
 @app.before_first_request
 def initializing():
     from configs import admin_user, admin_password, admin_name
+
     hashed_pass = hash_password(admin_password)
     success, token = authenticate_user(admin_user, hashed_pass)
+
     if not success:
         add_user(
             full_name=admin_name,
