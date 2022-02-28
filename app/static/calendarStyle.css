@@ -13,7 +13,7 @@
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	height: 3px;
+	height: 0.2rem;
 	overflow: hidden;
 	user-select: none;
 	color: transparent;
@@ -70,7 +70,7 @@ h3 {
 	display: flex;
 	padding: 0.3rem;
 	background-color: inherit;
-	border: 2px solid #FFD700;
+	border: 0.2rem solid #FFD700;
 	color: #FFD700;
 	margin-left: 50rem;
 }
