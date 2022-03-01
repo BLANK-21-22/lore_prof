@@ -26,7 +26,7 @@
                 </div>
                 <div class="meetInfo">
                     <p>
-                        {{ description }}
+                        {{ description|safe }}
                     </p>
                     <button class="meetDetails" onclick="window.location.href = './aboutMeet/{{event_id}}';">
                         Подробнее
