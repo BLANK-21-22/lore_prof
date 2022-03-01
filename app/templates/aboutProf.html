@@ -16,7 +16,7 @@
             {{ header(account.full_name) }}
     </header>
      <main>
-         <h1><center>{{ profession.name }}</center></h1>
+         <img src="{{url_for('static', filename='common_photos/WEB_обложка.png')}}" class="mainCoverWeb">
          {{ profession.article|safe }}
     </main>
 	</div>
