@@ -32,33 +32,19 @@
 	background-color: transparent;
 }
 
-.meet {
+.meetAboutTime {
 	display: flex;
-	flex-wrap: nowrap;
-	padding: 1rem 3rem;
-	border-bottom: 0.3rem dotted black;
-	margin: 0 1rem;
+	margin-right: 2rem;
+	border: 0.2rem solid black;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
 }
 
 .meetAboutTime {
 	padding: 0 0.7rem 0.7rem 0.7rem;
 	margin-right: 2rem;
 	border: 0.2rem solid black;
-}
-
-.meetTime {
-	display: flex;
-	justify-content: center;
-	margin-top: 0.5rem;
-	margin-bottom: 0;
-}
-
-.parTime {
-	margin: 0;
-}
-
-.meetDate {
-	text-align: center;
 }
 
 h3 {
