@@ -16,7 +16,15 @@
             {{ header(account.full_name) }}
     </header>
      <main>
+	 <div class="preloader">
+            <div class="preloader__row">
+                <div class="preloader__item"></div>
+                <div class="preloader__item"></div>
+            </div>
+        </div>
+	     
          <img src="{{url_for('static', filename='common_photos/WEB_обложка.png')}}" alt=" {{ profession.name }} " class="mainCoverWeb">
+	     
          {{ profession.article|safe }}
     </main>
 	</div>
