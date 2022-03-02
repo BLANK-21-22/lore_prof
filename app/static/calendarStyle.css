@@ -32,6 +32,14 @@
 	background-color: transparent;
 }
 
+.meet {
+	display: flex;
+	flex-wrap: nowrap;
+	padding: 1rem 3rem 1rem 10rem;
+	border-bottom: 0.3rem dotted black;
+	margin: 0 1rem;
+}
+
 .meetAboutTime {
 	display: flex;
 	margin-right: 2rem;
@@ -39,12 +47,6 @@
 	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
-}
-
-.meetAboutTime {
-	padding: 0 0.7rem 0.7rem 0.7rem;
-	margin-right: 2rem;
-	border: 0.2rem solid black;
 }
 
 h3 {
@@ -60,4 +62,3 @@ h3 {
 	color: #FFD700;
 	margin-left: 50rem;
 }
-
