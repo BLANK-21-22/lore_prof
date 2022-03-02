@@ -17,29 +17,33 @@
     </header>
 
     <main>
+	    
+	<img src="{{url_for('static', filename='common_photos/FrontDevMeetCover.png')}}" alt="Кто такой frontend разработчик и что он ест?" class="mainCoverWeb">
+	    
         <div class="meetInfoDiv">
-            <div class="meetDate">
-                <p><b>Дата митапа</b>
-            	<br>
-                    {{ event.date_of_the_event }}
-            	</p>
-            </div>
-            <div class="meetTime">
-                <p><b>Время</b>
+            <p><center><b> Дата и время митапа </b>
+            <br>
+                {{ event.date_of_the_event }} </center>
+            </p>
+            <p><center><b> Спикер </b>
+            <br>
+            Иванов Иван Иванович </center>
+            </p>
+            <p><center><b> Формат проведения </b>
                 <br>
-                XXX
-            	</p>
-            </div>
-            <div class="meetLen">
-                <p><b>Длительность</b>
-                <br>
-                XXX
-            	</p>
-            </div>
-
+                {{ event.form_of_the_event }} </center>
+            </p>
         </div>
 	    
-	<div class="meetDescription">{{ event.description|safe }}</div>
+	<div class="meetDescription">
+		{{ event.description|safe }}
+	</div>
+	    
+	<div class="meetPlace">
+        	<p><b> Мероприятие {{ event.form_of_the_event }}<br>
+        	Место проведения: {{ event.place }}
+        	</b></p>
+        </div>
     </main>
 	</div>
             {% from 'footerMacr.html' import footer %}
