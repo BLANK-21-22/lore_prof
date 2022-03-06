@@ -24,7 +24,15 @@
             </div>
         </div>
 	    
-        <h1>This is a page about past meet</h1>
+        <img src="{{url_for('static', filename='common_photos/FrontDevMeetCover.png')}}" alt="{{ event.name }}" class="mainCoverWeb">
+	   
+	<div class="meetDescription">
+		{{ event.description|safe }}
+	</div>
+	    
+	<div class="meetVideo">
+		<p>Запись мероприятия доступна по ссылке "ссылка"</p>
+        </div>
     </main>
 </div>
 
