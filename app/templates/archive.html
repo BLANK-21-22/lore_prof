@@ -29,8 +29,12 @@
         </form>
         {% from 'archiveMeetMacr.html' import pastMeet %}
 
-        {% for meeting in meetings %}
-            {{ pastMeet(meeting) }}
+        {% for event in events %}
+        {{
+        pastMeet(
+            event.id, event.name, event.date_of_the_event, event.description,
+            event.place, event.form_of_the_event)
+        }}
         {% endfor %}
     </main>
     </div>
