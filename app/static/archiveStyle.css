@@ -13,7 +13,7 @@
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	height: 0.2rem;
+	height: 3px;
 	overflow: hidden;
 	user-select: none;
 	color: transparent;
@@ -28,7 +28,7 @@
 	width: auto;
 	min-width: 100%;
 	line-height: 2rem;
-	border-bottom: 0.17rem solid #333333;
+	border-bottom: 0.17rem solid #7f7f7f;
 	background-color: transparent;
 }
 
@@ -36,29 +36,8 @@
 	display: flex;
 	flex-wrap: nowrap;
 	padding: 1rem 3rem;
-	border-bottom: 0.3rem dotted black;
+	border-bottom: 0.3rem dotted #151515;
 	margin: 0 1rem;
-}
-
-.meetAboutTime {
-	padding: 0 0.7rem 0.7rem 0.7rem;
-	margin-right: 2rem;
-	border: 0.2rem solid black;
-}
-
-.meetTime {
-	display: flex;
-	justify-content: center;
-	margin-top: 0.5rem;
-	margin-bottom: 0;
-}
-
-.parTime {
-	margin: 0;
-}
-
-.meetDate {
-	text-align: center;
 }
 
 h3 {
@@ -70,7 +49,7 @@ h3 {
 	display: flex;
 	padding: 0.3rem;
 	background-color: inherit;
-	border: 0.2rem solid #FFD700;
+	border: 2px solid #FFD700;
 	color: #FFD700;
 	margin-left: 50rem;
 }
