@@ -1,9 +1,9 @@
 # Этот модуль предназначен исключительно для методов, относящимися к Базе Данных.
 
 from models import Event, EventSpheres
-from models import EventRegistered, ProfessionSphere
-from models import Profession, ProfessionPhotos, User, Sphere
-from models import Token
+from models import EventRegistered
+from models import Profession, ProfessionPhotos, ProfessionSpheres
+from models import Token, User
 from models import Session
 import answers
 from configs import token_symbols, token_size
@@ -13,97 +13,32 @@ import datetime
 from random import choice as random_choice
 
 
-def add_object(func_to_create):
-    """
-    Оборачиваемая функция должна вернуть полноценный объект:
-    Это реализация класса, который необходимо добавить.
-    """
-    def wrapper(*args, **kwargs):
-        session: SessionObject
-        session = Session(expire_on_commit=False)
+def add_profession(name: str, article: str, short_article: str, icon_link: str):
+    if len(name) >= 50:
+        return False, answers.profession_name_len_limit
 
-        result_object = func_to_create(*args, **kwargs)
-        if result_object and not isinstance(result_object, str):
-            session.add(result_object)
-            session.commit()
-
-            session.close()
-            return True, result_object
-        return False, result_object
-    return wrapper
-
-
-def delete_object_by_id(func_to_get):
-    """
-    Оборачиваемая функция должна вернуть два параметра:
-    1. Класс объекта, являющейся представлением таблицы.
-    2. Уникальный ID объекта (как spheres.id).
-    """
-    def wrapper(*args, **kwargs):
-        session: SessionObject
-        session = Session(expire_on_commit=False)
-        object_class, object_id = func_to_get(*args, **kwargs)
-
-        result_object = session.query(object_class).get(object_id)
-        if result_object:
-            session.delete(result_object)
-            session.commit()
-
-        session.close()
-
-        return bool(result_object), result_object
-    return wrapper
-
-
-@add_object
-def add_sphere(sphere_name: str):
-    if len(sphere_name) >= 20:
-        return answers.sphere_name_max_limit
-
-    new_sphere = Sphere(name=sphere_name)
-    return new_sphere
-
-
-@delete_object_by_id
-def del_sphere_by_id(sphere_id: int):
-    return Sphere, sphere_id
-
-
-def get_sphere_by_name(sphere_name: str):
     session: SessionObject
-    with Session() as session:
-        query = session.query(Sphere).filter(Sphere.name == sphere_name)
-        spheres = query.all()
-        if not spheres:
-            return None
-    return spheres[0]
+    with Session(expire_on_commit=False) as session:
+        new_profession = Profession(
+            name=name,
+            article=article,
+            short_article=short_article,
+            icon_link=icon_link
+        )
+        session.add(new_profession)
+        session.commit()
+
+    return True, new_profession
 
 
-def get_all_spheres():
-    session: SessionObject
-    session = Session()
-
-    result_object = session.query(Sphere).all()
-
-    session.close()
-    return result_object
-
-
-@add_object
-def add_profession(name: str, article: str):
-    if len(name) >= 25:
-        return answers.profession_name_len_limit
-
-    new_profession = Profession(
-        name=name,
-        article=article
-    )
-    return new_profession
-
-
-@delete_object_by_id
 def delete_profession_by_id(profession_id: int):
-    return Profession, profession_id
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        profession = session.query(Profession).get(profession_id)
+        if profession:
+            session.delete(profession)
+            session.commit()
+    return bool(profession), profession
 
 
 def get_all_professions(limit: int, offset: int, query: str):
@@ -119,72 +54,88 @@ def get_all_professions(limit: int, offset: int, query: str):
         all_professions = all_professions.order_by(Profession.name.desc())
         all_professions = all_professions.offset(offset).limit(limit)
         all_professions = all_professions.all()
+
     return all_professions
 
 
-@add_object
 def add_user(full_name: str, email: str, hashed_password: str):
     if not check_free_email(email):
-        return answers.busy_email
-    if len(email) >= 255:
-        return answers.email_len_limit
-    if len(full_name) >= 100:
-        return answers.full_name_len_limit
+        return False, answers.busy_email
 
-    new_user = User(
-        full_name=full_name,
-        email=email,
-        hash_password=hashed_password
-    )
-    return new_user
-
-
-@delete_object_by_id
-def delete_user(user_id: int):
-    return User, user_id
-
-
-@add_object
-def get_new_token(user_id: int):
-    new_token = ""
-    not_free_token = True
     session: SessionObject
-    session = Session()
-    while not_free_token:
+    with Session(expire_on_commit=False) as session:
+        new_user = User(
+            full_name=full_name,
+            email=email,
+            hash_password=hashed_password
+        )
+        session.add(new_user)
+        session.commit()
+    return True, new_user
+
+
+def delete_user(user_id: int):
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        user = session.query(User).get(user_id)
+        if user:
+            session.delete(user)
+            session.commit()
+
+    return bool(user), user
+
+
+def generate_token(session: SessionObject):
+    """Генерация абсолютно нового токена."""
+    busy_token = True
+    new_token = ""
+
+    while busy_token:
         new_token = ""
         for _ in range(token_size):
             symbol: str
             symbol = random_choice(token_symbols)
             new_token += random_choice((symbol, symbol.upper()))
-        not_free_token = bool(session.query(Token).filter(Token.token == new_token).count())
+        busy_token = bool(session.query(Token).filter(Token.key == new_token).count())
 
-    session.close()
-    expiration_date = datetime.datetime.now() + datetime.timedelta(days=1)
-    return Token(
-        user_id=user_id,
-        token=new_token,
-        expiration_date=expiration_date
-    )
+    return new_token
+
+
+def get_active_token(user_id: int):
+    """Получение активного токена."""
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        active_tokens = session.query(Token).filter(
+            Token.user_id == user_id, Token.expiration_date > datetime.datetime.now()
+        ).all()
+        if active_tokens:
+            return active_tokens[-1]
+
+        key = generate_token(session)
+        expiration_date = datetime.datetime.now() + datetime.timedelta(days=1)
+        token = Token(
+            user_id=user_id,
+            key=key,
+            expiration_date=expiration_date
+        )
+        session.add(token)
+        session.commit()
+    return token
 
 
 def authenticate_user(email: str, hash_password: str):
     """
     Проверка логина и пароля.
-    Получение токена.
+    Получение действующего токена.
     """
     session: SessionObject
-    session = Session()
-    user: User
-    user = session.query(User).filter(User.email == email and User.hash_password == hash_password).all()
-    session.close()
-    if not user:
-        return False, None
-    user = user[0]
-    token: Token
-    is_token, token = get_new_token(user.id)
-
-    if not is_token:
-        return False, None
+    with Session() as session:
+        user: User
+        user = session.query(User).filter(User.email == email and User.hash_password == hash_password).all()
+        if not user:
+            return False, None
+        user = user[0]
+        token = get_active_token(user.id)
 
     return True, token
 
@@ -196,10 +147,11 @@ def check_free_email(email: str):
     False: почта занята.
     """
     session: SessionObject
-    session = Session()
-    query = session.query(User).filter(User.email == email)
-    session.close()
-    return not bool(query.count())
+    with Session() as session:
+        query = session.query(User).filter(User.email == email)
+        count = bool(query.count())
+
+    return not count
 
 
 def get_user_by_token(token: str):
@@ -209,46 +161,99 @@ def get_user_by_token(token: str):
     session: SessionObject
     with Session(expire_on_commit=False) as session:
         token = session.query(Token).get(token)
-        if token:
-            if token.expiration_date > datetime.datetime.now():
-                user_id = token.user_id
-                user = session.query(User).get(user_id)
-            else:
-                user = None
-        else:
-            user = None
+        if not token:
+            return None
+
+        if token.expiration_date <= datetime.datetime.now():
+            return None
+        user_id = token.user_id
+        user = session.query(User).get(user_id)
 
     return user
 
 
-@add_object
 def add_event(event_name: str, date_of_the_event: datetime,
-              description: str, place: str,
-              form_of_the_event: str):
+              description: str, short_description: str,
+              place: str, form_of_the_event: str,
+              duration_in_hours: float, speaker_id: int,
+              icon_link: str):
     """Добавление мероприятия."""
     if len(event_name) >= 50:
         return answers.event_name_len_limit
-    if len(place) >= 255:
-        return answers.event_place_len_limit
-    if len(form_of_the_event) >= 15:
-        return answers.event_form_len_limit
 
-    return Event(
-        name=event_name,
-        date_of_the_event=date_of_the_event,
-        description=description,
-        place=place,
-        form_of_the_event=form_of_the_event
-    )
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        event = Event(
+            name=event_name,
+            date_of_the_event=date_of_the_event,
+            description=description,
+            short_description=short_description,
+            place=place,
+            duration_in_hours=duration_in_hours,
+            form_of_the_event=form_of_the_event,
+            speaker_id=speaker_id,
+            icon_link=icon_link
+        )
+        session.add(event)
+        session.commit()
+    return event
 
 
-@delete_object_by_id
-def delete_event(event_id):
-    """Удаление мероприятия"""
-    return Event, event_id
+def delete_event(event_id: int):
+    """Удаление мероприятия."""
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        event = session.query(Event).get(event_id)
+        if event:
+            session.delete(event)
+        query = session.query(EventRegistered).filter(
+            EventRegistered.event_id == event_id
+        )
+        for registered in query.all():
+            session.delete(registered)
+
+        query = session.query(EventSpheres).filter(
+            EventSpheres.event_id == event_id
+        )
+        for spheres in query.all():
+            session.delete(spheres)
+
+        session.commit()
+
+    return True, event
 
 
-def get_events(limit: int, offset: int, from_date: datetime, to_date: datetime, query: str):
+def add_sphere_to_event(event_id: int, sphere: str):
+    session: SessionObject
+    with Session(expire_on_commit=False) as session:
+        events_sphere = EventSpheres(
+            event_id=event_id,
+            name=sphere
+        )
+        session.add(events_sphere)
+        session.commit()
+    return True
+
+
+def delete_sphere_from_event(event_id: int, sphere: str = "*"):
+    session: SessionObject
+    with Session() as session:
+        query: Query
+        query = session.query(EventSpheres)
+        query = query.filter(EventSpheres.event_id == event_id)
+        if sphere != "*":
+            for event_sphere in query.filter(EventSpheres.name.ilike(sphere)).all():
+                session.delete(event_sphere)
+        else:
+            query.delete()
+        session.commit()
+    return True
+
+
+def get_events(limit: int, offset: int,
+               from_date: datetime.datetime,
+               to_date: datetime.datetime,
+               query: str):
     """
     Получение списка всех мероприятий за определённый срок.
 
@@ -270,15 +275,20 @@ def get_events(limit: int, offset: int, from_date: datetime, to_date: datetime, 
     return result
 
 
-@add_object
 def register_user_on_event(user_id: int, event_id: int):
     """
     Регистрация пользователя на событие.
     """
-    return EventRegistered(
-        user_id=user_id,
-        event_id=event_id
-    )
+    session: SessionObject
+    with Session() as session:
+        new_event_registered = EventRegistered(
+            user_id=user_id,
+            event_id=event_id
+        )
+        session.add(new_event_registered)
+        session.commit()
+
+    return bool(new_event_registered)
 
 
 def delete_registration_on_event(user_id: int, event_id: int):
@@ -287,24 +297,33 @@ def delete_registration_on_event(user_id: int, event_id: int):
     """
     session: SessionObject
     with Session(expire_on_commit=False) as session:
-        event_registered = session.query(EventRegistered).filter(EventRegistered.user_id == user_id)
-        event_registered = event_registered.filter(EventRegistered.event_id == event_id).first()
-        if event_registered:
-            session.delete(event_registered)
-            session.commit()
-            return True, event_registered
-        return False, None
+        event_registered = session.query(EventRegistered).filter(
+            EventRegistered.user_id == user_id,
+            EventRegistered.event_id == event_id
+        )
+        event_registered = event_registered.get()
+        if not event_registered:
+            return False, None
+
+        session.delete(event_registered)
+        session.commit()
+    return True, event_registered
 
 
 def user_registered(user_id: int):
     """
-    Куда зарегистрирован пользователь.
+    Список мероприятий, на которые пользователь зарегистрирован.
+
+    [(EventRegistered, EventObject), (EventRegistered, EventObject)...]
     """
     session: SessionObject
     with Session() as session:
         query: Query
-        query = session.query(EventRegistered).filter(user_id == EventRegistered.user_id)
-        return query.all()
+        query = session.query(EventRegistered, Event).filter(
+            EventRegistered.user_id == user_id
+        )
+        query = query.join(Event, Event.id == EventRegistered.event_id)
+    return query.all()
 
 
 def count_registered(event_id: int):
@@ -314,60 +333,48 @@ def count_registered(event_id: int):
     session: SessionObject
     with Session() as session:
         query: Query
-        query = session.query(EventRegistered).filter(event_id == EventRegistered.event_id)
-        return query.count()
+        query = session.query(EventRegistered).filter(
+            EventRegistered.event_id == event_id
+        )
+    return query.count()
 
 
-@add_object
-def add_sphere_to_event(sphere_id: int, event_id: int):
-    return EventSpheres(
-        sphere_id=sphere_id,
-        event_id=event_id
-    )
+def add_sphere_to_profession(profession_id: int, sphere: str):
+    session: SessionObject
+    with Session() as session:
+        profession_sphere = ProfessionSpheres(
+            profession_id=profession_id,
+            name=sphere
+        )
+        session.add(profession_sphere)
+        session.commit()
+    return True
 
 
-def delete_sphere_from_event(event_id: int, sphere_id: int = "*"):
+def delete_sphere_from_profession(profession_id: int, sphere: str = "*"):
     session: SessionObject
     with Session(expire_on_commit=False) as session:
         query: Query
-        query = session.query(EventSpheres)
-        query = query.filter(EventSpheres.event_id == event_id)
-        if isinstance(sphere_id, int):
-            query.filter(EventSpheres.sphere_id == sphere_id).delete()
+        query = session.query(ProfessionSpheres)
+        query = query.filter(ProfessionSpheres.profession_id == profession_id)
+        if sphere != "*":
+            query.filter(ProfessionSpheres.name == sphere).delete()
         else:
             query.delete()
         session.commit()
     return True
 
 
-@add_object
-def add_sphere_to_profession(profession_id: int, sphere_id: int):
-    return ProfessionSphere(
-        prof_id=profession_id,
-        sphere_id=sphere_id
-    )
-
-
-def delete_sphere_from_profession(profession_id: int, sphere_id: int = "*"):
-    session: SessionObject
-    with Session(expire_on_commit=False) as session:
-        query: Query
-        query = session.query(ProfessionSphere)
-        query = query.filter(ProfessionSphere.prof_id == profession_id)
-        if isinstance(sphere_id, int):
-            query.filter(ProfessionSphere.sphere_id == sphere_id).delete()
-        else:
-            query.delete()
-        session.commit()
-    return True
-
-
-@add_object
 def add_photo_to_profession(profession_id: int, link: str):
-    return ProfessionPhotos(
-        prof_id=profession_id,
-        link=link
-    )
+    session: SessionObject
+    with Session() as session:
+        profession_photo = ProfessionPhotos(
+            prof_id=profession_id,
+            link=link
+        )
+        session.add(profession_photo)
+        session.commit()
+    return profession_photo
 
 
 def delete_photo_from_profession(profession_id: int, link: str):
@@ -375,24 +382,14 @@ def delete_photo_from_profession(profession_id: int, link: str):
     with Session(expire_on_commit=False) as session:
         query: Query
         query = session.query(ProfessionPhotos)
-        query = query.filter(ProfessionPhotos.prof_id == profession_id)
+        query = query.filter(ProfessionPhotos.profession_id == profession_id)
         query = query.filter(ProfessionPhotos.link == link)
         result = query.first()
-        if result:
-            session.delete(result)
-            session.commit()
-            return True, result
-        return False, None
-
-
-def delete_links_for_spheres(sphere_id: int):
-    session: SessionObject
-    with Session() as session:
-        query = session.query(EventSpheres).filter(EventSpheres.sphere_id == sphere_id)
-        query.delete()
-        query = session.query(ProfessionSphere).filter(ProfessionSphere.sphere_id == sphere_id)
-        query.delete()
-    return True
+        if not result:
+            return False, None
+        session.delete(result)
+        session.commit()
+    return True, result
 
 
 def get_event(event_id: int):
@@ -408,18 +405,19 @@ def get_event(event_id: int):
     session: SessionObject
     with Session(expire_on_commit=False) as session:
         query: Query
-        query = session.query(Event, Sphere)
-        query = query.outerjoin(EventSpheres, EventSpheres.event_id == Event.id)
-        query = query.outerjoin(Sphere, Sphere.id == EventSpheres.sphere_id)
+        query = session.query(Event, EventSpheres)
+        query = query.join(EventSpheres, EventSpheres.event_id == Event.id, isouter=True)
 
         query = query.filter(Event.id == event_id)
         result = query.all()
         if result:
+            result = result[0]
+
             result = {
-                "event": result[0][0],
-                "spheres": [x[1] for x in result]
+                "event": result[0],
+                "spheres": result[1]
             }
-            return result
+    return result
 
 
 def get_profession(profession_id: int):
@@ -437,24 +435,22 @@ def get_profession(profession_id: int):
     session: SessionObject
     with Session(expire_on_commit=False) as session:
         query: Query
-        query = session.query(Profession, ProfessionSphere, ProfessionPhotos)
-        query = query.outerjoin(ProfessionSphere, ProfessionSphere.prof_id == Profession.id)
-        query = query.outerjoin(ProfessionPhotos, ProfessionPhotos.prof_id == Profession.id)
-        query = query.filter(Profession.id == profession_id)
+        query = session.query(Profession)
+        profession = query.get(profession_id)
+        if not profession:
+            return None
 
-        result = query.all()
-        if result:
-            beauty_result = {
-                "profession": result[0][0],
-                "spheres": [],
-                "photos": []
-            }
-            for _, sphere, photo in result:
-                if sphere and sphere not in beauty_result["spheres"]:
-                    beauty_result["spheres"].append(sphere)
-                if photo and photo not in beauty_result["photos"]:
-                    beauty_result["photos"].append(photo)
-        else:
-            beauty_result = None
-
+        spheres = session.query(ProfessionSpheres).filter(
+            ProfessionSpheres.profession_id == profession_id
+        )
+        spheres = spheres.all()
+        photos = session.query(ProfessionPhotos).filter(
+            ProfessionPhotos.profession_id == profession_id
+        )
+        photos = photos.all()
+        beauty_result = {
+            "profession": profession,
+            "spheres": spheres,
+            "photos": photos
+        }
         return beauty_result

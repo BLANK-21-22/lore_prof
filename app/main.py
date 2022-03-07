@@ -1,6 +1,6 @@
 import datetime
 
-from flask import render_template, redirect
+from flask import render_template
 from flask import Flask, session, request, abort
 from behaviour import get_user_by_token, authenticate_user, add_user
 from configs import token_expire_date, events_thru_to_date_in_seconds, token_symbols, token_size
@@ -19,14 +19,10 @@ def hash_password(password: str):
 
 def set_token(response, token: str):
     """Ставим Куки, чтобы пользователь имел возможность для авторизации..."""
-    response.set_cookie(
-        key="token",
-        value=token,
-        max_age=token_expire_date,
-        secure=True,
-        httponly=True,
-        samesite="strict",
-    )
+
+    session.setdefault("token", token)
+    session.setdefault("expiration_date", token_expire_date)
+
     return response
 
 
@@ -34,7 +30,7 @@ def authorize(url_was_visited: str):
     if url_was_visited:
         session["url"] = url_was_visited
 
-    token = request.cookies.get("token")
+    token = session.get("token")
     if token:
         account = get_user_by_token(token)
     else:
@@ -45,8 +41,7 @@ def authorize(url_was_visited: str):
 def get_first_picture(profession_id: int):
     profession = behaviour.get_profession(profession_id)
     if profession:
-        if profession["photos"]:
-            return profession["photos"][0]
+        return profession["profession"].icon_link
     return None
 
 
@@ -73,8 +68,10 @@ def get_meet(meet_id: int):
 
     if not event:
         return abort(404)
+    spheres = event["spheres"]
     event = event["event"]
-    return render_template("aboutMeet.html", account=account, event=event)
+
+    return render_template("aboutMeet.html", account=account, event=event, spheres=spheres)
 
 
 @app.route("/archive", methods=["GET"])
@@ -83,6 +80,7 @@ def get_archive():
     account = authorize(url)
 
     query = dict(request.values).get("query")
+
     from_date = datetime.datetime(year=2020, month=1, day=1)
     to_date = datetime.datetime.now()
     meetings = behaviour.get_events(10, 0, from_date, to_date, query)
@@ -109,7 +107,7 @@ def get_professions():
         account=account,
         professions=professions,
         get_first_picture=get_first_picture,
-        get_short_article=lambda x: x[:50],
+        get_short_article=lambda x: x.short_article,
         enumerate=enumerate
     )
 
@@ -128,6 +126,8 @@ def get_profession(profession_id: int):
         "aboutProf.html",
         account=account,
         profession=profession["profession"],
+        spheres=profession["spheres"],
+        photos=profession["photos"]
     )
 
 
@@ -144,6 +144,7 @@ def get_event(event_id: int):
         "aboutMeet.html",
         account=account,
         event=event["event"],
+        spheres=event["spheres"]
     )
 
 
@@ -152,6 +153,7 @@ def get_calendar():
     url = "/calendar"
     account = authorize(url)
     query = dict(request.values).get("query")
+
     from_date = datetime.datetime.now()
     to_date = datetime.timedelta(
         seconds=events_thru_to_date_in_seconds
@@ -180,27 +182,37 @@ def logining_request():
     success, token = authenticate_user(login, hashed_password)
 
     if success:
-        return {"token": token.token, "expire_date": token.expiration_date}
+        return {"token": token.key, "expire_date": token.expiration_date}
     else:
         return {"error": "Неверный логин или пароль."}
 
 
 @app.route("/api/profession", methods=["POST", "DELETE"])
 def api_profession():
-    request_json = dict(request.values)
+    request_json = dict(request.values.copy())
+    if "spheres" in request_json:
+        request_json["spheres"] = str(request_json["spheres"]).split(",")
     return api.profession(request.method, request_json).__dict__()
 
 
 @app.route("/api/event", methods=["POST", "DELETE"])
 def api_meet():
-    request_json = dict(request.values)
+    request_json = dict(request.values.copy())
+    if "spheres" in request_json:
+        request_json["spheres"] = str(request_json["spheres"]).split(",")
     return api.event(request.method, request_json).__dict__()
 
 
-@app.route("/api/sphere", methods=["GET", "POST", "DELETE"])
-def api_spheres():
+@app.route("/api/sphere/profession", methods=["POST", "DELETE"])
+def api_spheres_profession():
     request_json = dict(request.values)
-    return api.spheres(request.method, request_json).__dict__()
+    return api.spheres_profession(request.method, request_json).__dict__()
+
+
+@app.route("/api/sphere/event", methods=["GET", "POST", "DELETE"])
+def api_spheres_event():
+    request_json = dict(request.values)
+    return api.spheres_event(request.method, request_json).__dict__()
 
 
 @app.before_first_request

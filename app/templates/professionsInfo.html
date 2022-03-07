@@ -36,7 +36,7 @@
                         <img src="{{ get_first_picture(profession.id) if get_first_picture(profession.id) else url_for('static', filename='/common_photos/logo.png') }}" class="cardImg" alt="Профессия">
                         <div class="cardBody">
                         <h3 class="cardTitle">{{ profession.name }}</h3>
-                        <p class="cardText">{{ get_short_article(profession.article|safe) }}</p>
+                        <p class="cardText">{{ profession.short_article|safe }}</p>
                             <div class="divBtnMore">
                                 <a href="/profession/{{ profession.id }}" class="btnMore">Подробнее</a>
                             </div>
