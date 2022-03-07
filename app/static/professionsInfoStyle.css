@@ -13,7 +13,7 @@
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	height: 0.2rem;
+	height: 3px;
 	overflow: hidden;
 	user-select: none;
 	color: transparent;
@@ -28,7 +28,7 @@
 	width: auto;
 	min-width: 100%;
 	line-height: 2rem;
-	border-bottom: 0.17rem solid #333333;
+	border-bottom: 0.17rem solid #7f7f7f;
 	background-color: transparent;
 }
 
@@ -39,10 +39,10 @@
 }
 
 .card {
-	background-color: #0c0e0f;
+	background-color: #181818;
 	width: auto;
 	padding: 0.4rem;
-	box-shadow: 0 0.3rem 0.5rem 0 black;
+	box-shadow: 0 0.3rem 0.5rem 0 #151515;
 	border-radius: 0.3rem;
 	border: solid 0.1rem #FFD700;
 	max-width: 17rem;
@@ -59,7 +59,7 @@
 .cardTitle {
 	text-align: center;
 	margin: 0.1rem 0 0 0;
-	border-bottom: 0.3rem dotted black;
+	border-bottom: 0.3rem dotted #0c0c0c;
 }
 
 .cardText {

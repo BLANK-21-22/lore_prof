@@ -1,0 +1,16 @@
+main {
+    margin: 0 10rem;
+}
+li {
+    margin: 0 6rem 0.5rem 3rem;
+}
+.mainCoverWeb {
+    left: 0;
+    width: 100%;
+}
+
+.meetInfoDiv {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 3rem;
+}
